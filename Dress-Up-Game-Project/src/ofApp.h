@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ofMain.h"
 #include "ClickToSelect.h"
 
@@ -21,6 +20,5 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-private:
-    vector<ClickToSelect> ClickToSelectImages; // Vector to store clickable images
+    vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
 };

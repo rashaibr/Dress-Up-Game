@@ -5,15 +5,14 @@ class ClickToSelect {
 public:
     ClickToSelect(ofImage _imageToSelect, ofImage _imageResult, float x, float y);
 
-    void draw(); // Draw the clickable image
+    void draw(); // Draw the image to select
     bool isMouseInside(float x, float y); // Check if the mouse is inside the hitbox
-    void toggleResult(); // Toggle the display state of the result image
-    void displayResultImage(float x, float y); // Display the result image if toggled
-
-    bool isClicked = false; // Track whether the result image is toggled on
+    void toggleResult(); // Toggle the result image's display state
+    void displayResultImage(float x, float y); // Conditionally display the result image
 
 private:
-    ofImage imageToSelect;    // The clickable image
-    ofImage imageResult;      // The result image
-    ofRectangle hitBox;       // The clickable area
+    ofImage imageToSelect;    // Initial clickable image
+    ofImage imageResult;      // Image to display on toggle
+    ofRectangle hitBox;       // Hitbox for mouse interaction
+    bool isClicked;           // State to track toggling
 };
