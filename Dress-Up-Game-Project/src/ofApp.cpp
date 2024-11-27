@@ -3,11 +3,23 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 
-    //set window size
-    ofSetWindowShape(1500, 800);
+    // Set window size and position
+    ofSetWindowShape(1280, 720);
 
-    //background color
-    ofBackground(255);
+    int screenWidth = ofGetScreenWidth();
+    int screenHeight = ofGetScreenHeight();
+
+    int windowWidth = 1280; 
+    int windowHeight = 720; 
+
+    int x = (screenWidth - windowWidth) / 2;
+    int y = (screenHeight - windowHeight) / 2;
+
+    
+    ofSetWindowPosition(x, y);
+
+    // Set background color
+    ofBackground(255); // White background
 
     //load assets
     characterBase.load("character.png");
@@ -78,10 +90,10 @@ void ofApp::draw() {
     }
 
     //draw the character base
-    characterBase.draw(0, 0, characterBase.getWidth(), characterBase.getHeight());
+    characterBase.draw(0,0, characterBase.getWidth(), characterBase.getHeight());
 
     //draw clothing items
-    for (size_t i = 0; i < clothingItems.size(); i++) {
+      for (size_t i = 0; i < clothingItems.size(); ++i) {
         clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
     }
 }
@@ -95,22 +107,26 @@ void ofApp::mousePressed(int x, int y, int button) {
         }
     }
 
-    // Loop through all clothing items to check if the mouse click is within the bounds of the item
+    isDragging = false;       // Reset dragging state
+    currentItemIndex = -1;    // Reset selected item index
+
+    // Loop through clothing items to check if the mouse click is within their bounds
     for (size_t i = 0; i < clothingItems.size(); i++) {
-        // Get the item's bounds (left, right, top, bottom)
+        // Calculate the item's bounds
         float itemLeft = itemPositions[i].x;
         float itemRight = itemPositions[i].x + clothingItems[i]->getWidth();
         float itemTop = itemPositions[i].y;
         float itemBottom = itemPositions[i].y + clothingItems[i]->getHeight();
 
-        // Check if the mouse click is within the bounds of the item
+        // Check if the click is inside the bounds of the item
         if (x >= itemLeft && x <= itemRight && y >= itemTop && y <= itemBottom) {
             isDragging = true;
-            currentItemIndex = i; // Set the clicked item index
-            break; // Exit the loop once the item is selected
+            currentItemIndex = i; // Set the index of the clicked item
+            return; // Exit the loop as soon as the item is found
         }
     }
 }
+
 
 //--------------------------------------------------------------
 // Remaining event methods
