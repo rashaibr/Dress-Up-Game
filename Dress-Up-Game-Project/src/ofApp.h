@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ClickToSelect.h"
+#include "Headers.h"
 
 class ofApp : public ofBaseApp {
 public:
@@ -29,4 +30,35 @@ public:
     float windowPosPercentY(float percent);
     float windowScalePercentX(float percent, float originalWidth);
     float windowScalePercentY(float percent, float originalHeight);
+
+    UIBox skinHairBox;
+
+    //variables for the character and items
+
+    ofImage characterBase;
+    ofImage clothingItem1;
+    ofImage clothingItem2;
+    ofImage clothingItem3;
+    ofImage clothingItem4;
+    ofImage clothingItem5;
+
+    //position of the draggable item
+    float itemX1, itemY1;
+    float itemX2, itemY2;
+    float itemX3, itemY3;
+    float itemX4, itemY4;
+    float itemX5, itemY5;
+
+    //list of clothing items
+    vector<ofImage*> clothingItems;
+
+    //Positions of each clothing item
+    vector<ofVec2f> itemPositions;
+
+    //The index of the clothing item being dragged
+    int currentItemIndex;
+
+
+    //wether the item is being dragged
+    bool isDragging;
 };
