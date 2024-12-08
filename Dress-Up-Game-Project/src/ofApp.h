@@ -81,4 +81,9 @@ public:
     // Declare the new window size and position
     ofRectangle newWindow;
 
+    bool isCreditsOpen;           // Tracks if the credits window is open
+    ofRectangle creditsWindow;    // Rectangle for the credits popup
+    ofRectangle closeButton;      // Close button inside the credits popup
+
+
 };
