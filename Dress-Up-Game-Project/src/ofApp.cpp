@@ -18,6 +18,18 @@ void ofApp::setup() {
     
     ofSetWindowPosition(x, y);
 
+    // Set up the Main Menu button
+    menuButton.set(50, 50, 200, 50); // Position and size of the button
+
+    resumeButton.set(newWindow.x + 20, newWindow.y + 60, 200, 40); // "Resume Game"
+    creditsButton.set(newWindow.x + 20, newWindow.y + 110, 200, 40); // "Credits"
+    quitButton.set(newWindow.x + 20, newWindow.y + 160, 200, 40); // "Quit"
+    // Initialize the menu state to be closed
+    isMenuOpen = false;
+
+    // Create the new window that will open (initially hidden)
+    newWindow.set(300, 200, 600, 400); // Position and size of the new window
+
     // Set background color
     ofBackground(255); // White background
 
@@ -178,12 +190,44 @@ void ofApp::draw() {
     
     //character box
     ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    // Draw the button (Main Menu)
+    ofSetColor(ofColor::lightGray);
+    ofDrawRectangle(menuButton); // Draw the button
+
+    // Draw the label inside the button
+    ofSetColor(ofColor::black);
+    ofDrawBitmapString("Main Menu", menuButton.getCenter().x - 40, menuButton.getCenter().y);
 
     // Draw clothing items
     for (size_t i = 0; i < clothingItems.size(); ++i) {
+        ofSetColor(ofColor::white);
+
         clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
     }
 
+    // If the menu is open, draw the new window
+    if (isMenuOpen) {
+        // Update button positions dynamically based on newWindow's position
+        resumeButton.set(newWindow.x + 20, newWindow.y + 60, 200, 40);
+        creditsButton.set(newWindow.x + 20, newWindow.y + 110, 200, 40);
+        quitButton.set(newWindow.x + 20, newWindow.y + 160, 200, 40);
+
+        // Draw the new window
+        ofSetColor(ofColor::white);
+        ofDrawRectangle(newWindow);
+
+        // Draw buttons inside the window
+        ofSetColor(ofColor::lightGray);
+        ofDrawRectangle(resumeButton);
+        ofDrawRectangle(creditsButton);
+        ofDrawRectangle(quitButton);
+
+        // Draw button labels
+        ofSetColor(ofColor::black);
+        ofDrawBitmapString("Resume Game", resumeButton.getCenter().x - 50, resumeButton.getCenter().y + 5);
+        ofDrawBitmapString("Credits", creditsButton.getCenter().x - 30, creditsButton.getCenter().y + 5);
+        ofDrawBitmapString("Quit", quitButton.getCenter().x - 20, quitButton.getCenter().y + 5);
+    }
 }
 
 //--------------------------------------------------------------
@@ -213,7 +257,30 @@ void ofApp::mousePressed(int x, int y, int button) {
             return; // Exit the loop as soon as the item is found
         }
     }
+
+    // Check if the mouse is inside the Main Menu button
+    if (menuButton.inside(x, y)) {
+        isMenuOpen = !isMenuOpen; // Toggle the menu state
+        return; // Prevent further checks if the main menu button was clicked
+    }
+
+    // Check if the mouse clicks the buttons in the menu
+    if (isMenuOpen) {
+        if (resumeButton.inside(x, y)) {
+            isMenuOpen = false; // Close the menu
+            ofLogNotice() << "Resuming game...";
+        }
+        else if (creditsButton.inside(x, y)) {
+            ofLogNotice() << "Showing credits...";
+            // Add logic for showing credits
+        }
+        else if (quitButton.inside(x, y)) {
+            ofLogNotice() << "Quitting game...";
+            ofExit(); // Quit the application
+        }
+    }
 }
+
 
 
 //--------------------------------------------------------------
