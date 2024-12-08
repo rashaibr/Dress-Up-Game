@@ -32,6 +32,9 @@ public:
     float windowScalePercentY(float percent, float originalHeight);
 
     UIBox skinHairBox;
+    UIBox clothesBox;
+    UIBox topClothesBox;
+    UIBox bottomClothesBox;
     UIBox characterSnapRegion;
 
     //variables for the character and items

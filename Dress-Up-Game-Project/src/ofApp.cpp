@@ -61,7 +61,7 @@ void ofApp::setup() {
 
     int xOffset = 200; // Horizontal offset for positioning
     for (size_t i = 0; i < clothingItems.size(); ++i) {
-        itemPositions.push_back(ofVec2f(xOffset, 100));
+        itemPositions.push_back(ofVec2f(xOffset, 50));
         xOffset += 200; // Increment position for the next item
     }
 
@@ -101,6 +101,15 @@ void ofApp::update() {
         }
 
     }
+    //character box
+    characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
+    characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+    characterSnapRegion.hitBox.setPosition(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
+    characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+
+    //clothing box
+    clothesBox.SetPos(windowPosPercentX(35.0f), windowPosPercentY(35.0f));
+    clothesBox.SetSize(ofGetWindowWidth() * 0.5f, ofGetWindowHeight() * 0.5f);
 }
 
 //--------------------------------------------------------------
@@ -123,7 +132,7 @@ void ofApp::draw() {
     ofDrawRectangle(skinHairBox.GetPos(), skinHairBox.GetWidth(), skinHairBox.GetHeight());
 
     //clothing box
-    ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(35.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(50.0f, 1.0f));
+    ofDrawRectangle(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight());
 
     //top icons
     ofDrawRectangle(windowPosPercentX(75.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
@@ -159,10 +168,6 @@ void ofApp::draw() {
 
     //draw the character base
     //(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
-    characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
-    characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
-    characterSnapRegion.hitBox.setPosition(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
-    characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
     
     ofPushMatrix();
         ofTranslate(characterSnapRegion.hitBox.getCenter());
@@ -179,9 +184,61 @@ void ofApp::draw() {
     //character box
     ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
 
+    //top clothing
+    for (int i = 0; i < 4; i++)
+    {
+        
+        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
+        {
+            itemPositions[i] = topClothesBox.GetPos();
+        }
+
+        ofDrawRectangle(topClothesBox.GetPos(), topClothesBox.GetWidth(), topClothesBox.GetHeight());
+    }
+
+    //bottom clothing
+    for (int i = 0; i < 4; i++)
+    {
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.4f);
+        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
+        {
+            itemPositions[i + 4] = bottomClothesBox.GetPos();
+        }
+        
+        ofDrawRectangle(bottomClothesBox.GetPos(), bottomClothesBox.GetWidth(), bottomClothesBox.GetHeight());
+    }
+
     // Draw clothing items
     for (size_t i = 0; i < clothingItems.size(); ++i) {
-        clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
+
+      /*  if (!characterSnapRegion.hitBox.inside(itemPositions[i]))
+        {
+            if (clothingItems[i]->getHeight() > topClothesBox.GetHeight())
+            {
+                ofPushMatrix();
+                ofTranslate(itemPositions[i]);
+                ofScale(1.0f / clothingItems[i]->getHeight() * topClothesBox.GetHeight());
+                clothingItems[i]->draw(0, 0);
+                ofPopMatrix();
+            }
+            else if (clothingItems[i]->getWidth() > topClothesBox.GetWidth())
+            {
+                ofPushMatrix();
+                ofTranslate(itemPositions[i]);
+                ofScale(1.0f / clothingItems[i]->getWidth() * topClothesBox.GetWidth());
+                clothingItems[i]->draw(0,0);
+                ofPopMatrix();
+            }
+        }
+        else
+        {*/
+            clothingItems[i]->draw(itemPositions[i]);
+        //}
     }
 
 }
