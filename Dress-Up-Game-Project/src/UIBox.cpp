@@ -17,10 +17,16 @@ float UIBox::GetPosX()
 	return pos.x;
 }
 
-float UIBox::GetposY()
+float UIBox::GetPosY()
 {
 	return pos.y;
 }
+
+ofVec2f UIBox::GetPos()
+{
+	return pos;
+}
+
 float UIBox::GetWidth()
 {
 	return width;
