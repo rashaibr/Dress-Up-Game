@@ -21,7 +21,22 @@ void ofApp::setup() {
     // Set background color
     ofBackground(255); // White background
 
-    //load assets
+    //initial positions
+    itemX1 = 200;
+    itemY1 = 100;
+
+    itemX2 = 400;
+    itemY2 = 100;
+
+    itemX3 = 600;
+    itemY3 = 100;
+
+    itemX4 = 800;
+    itemY4 = 100;
+
+    itemX5 = 1000;
+    itemY5 = 100;
+
     characterBase.load("character.png");
     pinkShirt.load("pinkShirt.png");
     pinkShoes.load("pinkShoes.png");
@@ -61,15 +76,76 @@ void ofApp::setup() {
     ClickToSelectImages.push_back(ClickToSelect(imageToSelect1, imageResult1, 50, 50));
 
     ofLogNotice() << "Setup complete. Clickable images initialized.";
+
+    //layout setup
+    layoutRef.load("layout_main_ref.jpg");
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
     // Update logic if needed
+    skinHairBox.SetPos(windowPosPercentX(35.0f), windowPosPercentY(12.0f));
+    skinHairBox.SetSize(ofGetWindowWidth() * 0.5f, ofGetWindowHeight() * 0.2f);
+
+    //move dress if it's snapped to character
+    for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
+
+        if (itemPositions[i] == characterSnapRegion.hitBox.getCenter()) //if the item was snapped to center of character hitbox
+        {
+            //testing
+            //cout << "in center" << '\n';
+            //set the position of the corner of clothing image off center so it draws properly on the character
+            itemPositions[i].x = characterSnapRegion.hitBox.getCenter().x - (clothingItems[i]->getWidth() / 2);
+            itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
+            
+        }
+
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+    // draw layout
+    ofPushMatrix();
+        //scale background to the height of our window
+        ofScale((1.0f / layoutRef.getHeight()) * ofGetWindowHeight());
+        ofSetColor(ofColor(255));
+        //layoutRef.draw(0.0f, 0.0f);
+    ofPopMatrix();
+    ofBackground(128);
+    ofSetColor(ofColor(255, 0, 0, 128));
+    
+    //character stand
+    ofDrawRectangle(windowPosPercentX(5.0f), windowPosPercentY(75.0f), windowScalePercentX(25.0f, 1.0f), windowScalePercentY(30.0f, 1.0f));
+    
+    //sking + hair box
+    //ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(12.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(20.0f, 1.0f));
+    ofDrawRectangle(skinHairBox.GetPos(), skinHairBox.GetWidth(), skinHairBox.GetHeight());
+
+    //clothing box
+    ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(35.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(50.0f, 1.0f));
+
+    //top icons
+    ofDrawRectangle(windowPosPercentX(75.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+    ofDrawRectangle(windowPosPercentX(85.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+
+    //bottom icons
+    ofDrawRectangle(windowPosPercentX(85.0f), windowPosPercentY(88.0f), windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+
+    ofSetColor(ofColor(0, 0, 255, 128));
+
+    //skintone boxes
+    for (int i = 0; i < 7; i++)//SkinTones.size(); i++)
+    {
+        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetPosX() * 0.4f) + skinHairBox.GetPosX() * 0.15f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f);
+    }
+    //hair boxes
+    for (int i = 0; i < 3; i++)//HairLenghts.size(); i++)
+    {
+        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetPosX() * 0.4f) + skinHairBox.GetPosX() * 0.35f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
+    }
+
+    /*
     // Draw all clickable images
     for (int i = 0; i < ClickToSelectImages.size(); i++) {
         ClickToSelectImages[i].draw();
@@ -79,15 +155,35 @@ void ofApp::draw() {
     for (int i = 0; i < ClickToSelectImages.size(); i++) {
         ClickToSelectImages[i].displayResultImage(100, 100);
     }
+    */
 
     //draw the character base
-    characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
+    //(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+    characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
+    characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+    characterSnapRegion.hitBox.setPosition(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
+    characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    
+    ofPushMatrix();
+        ofTranslate(characterSnapRegion.hitBox.getCenter());
+        //ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
+        //cout << windowScalePercentY(65.0f, characterBase.getHeight()) << '\n';
+        ofSetRectMode(OF_RECTMODE_CENTER);
+        characterBase.draw(0, 0);//characterBase.getWidth() * 0.20f, characterBase.getHeight() * 0.5f);
+        ofSetRectMode(OF_RECTMODE_CORNER);
+        //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
 
-    //draw clothing items
+    //characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
+    ofPopMatrix();
+    
+    //character box
+    ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+
     // Draw clothing items
     for (size_t i = 0; i < clothingItems.size(); ++i) {
         clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
     }
+
 }
 
 //--------------------------------------------------------------
@@ -144,13 +240,19 @@ void ofApp::mouseReleased(int x, int y, int button) {
         float snapX = 600; // Example snap position (center of character)
         float snapY = 300;
 
-        ofRectangle snapRegion(snapX, snapY, characterBase.getWidth(), characterBase.getHeight());
+
+        //ofRectangle snapRegion(snapX, snapY, clothingItems[currentItemIndex]->getWidth(), clothingItems[currentItemIndex]->getHeight());
+        ofRectangle snapRegion(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+
+        //ofRectangle snapRegion(snapX, snapY, characterBase.getWidth(), characterBase.getHeight());
+
 
         // Check if the item is released within the snap region
         if (snapRegion.inside(x, y)) {
             // Center the item on the character base
-            itemPositions[currentItemIndex].x = snapX + (characterBase.getWidth() - clothingItems[currentItemIndex]->getWidth()) / 2;
-            itemPositions[currentItemIndex].y = snapY + (characterBase.getHeight() - clothingItems[currentItemIndex]->getHeight()) / 2;
+            //itemPositions[currentItemIndex].x = snapX + (characterBase.getWidth() - clothingItems[currentItemIndex]->getWidth()) / 2;
+            //itemPositions[currentItemIndex].y = snapY + (characterBase.getHeight() - clothingItems[currentItemIndex]->getHeight()) / 2;
+            itemPositions[currentItemIndex] = snapRegion.getCenter();
         }
     }
 
@@ -161,3 +263,24 @@ void ofApp::mouseExited(int x, int y) {}
 void ofApp::windowResized(int w, int h) {}
 void ofApp::gotMessage(ofMessage msg) {}
 void ofApp::dragEvent(ofDragInfo dragInfo) {}
+
+// for layout adjustmetns
+// how far into window do you want to go along the x (ex. 10%, 20%, 50%)
+float ofApp::windowPosPercentX(float percent)
+{
+    return (ofGetWindowWidth() * (percent / 100.0f));
+}
+// how deep do you want to go into y
+float ofApp::windowPosPercentY(float percent)
+{
+    return (ofGetWindowHeight() * (percent / 100.0f));
+}
+// scaling based on window size
+float ofApp::windowScalePercentX(float percent, float originalWidth)
+{
+    return ((1.0f / originalWidth) * (ofGetWindowWidth() * (percent / 100.0f)));
+}
+float ofApp::windowScalePercentY(float percent, float originalHeight)
+{
+    return ((1.0f / originalHeight) * (ofGetWindowHeight() * (percent / 100.0f)));
+}

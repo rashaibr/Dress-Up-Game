@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ClickToSelect.h"
+#include "Headers.h"
 
 class ofApp : public ofBaseApp {
 public:
@@ -21,6 +22,17 @@ public:
     void gotMessage(ofMessage msg);
 
     vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
+    vector<ClickToSelect> SkinTones;//store the skin tones 
+
+    //layout data
+    ofImage layoutRef;
+    float windowPosPercentX(float percent);
+    float windowPosPercentY(float percent);
+    float windowScalePercentX(float percent, float originalWidth);
+    float windowScalePercentY(float percent, float originalHeight);
+
+    UIBox skinHairBox;
+    UIBox characterSnapRegion;
 
     //variables for the character and items
 
