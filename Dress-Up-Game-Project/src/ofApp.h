@@ -36,11 +36,15 @@ public:
     //variables for the character and items
 
     ofImage characterBase;
-    ofImage clothingItem1;
-    ofImage clothingItem2;
-    ofImage clothingItem3;
-    ofImage clothingItem4;
-    ofImage clothingItem5;
+    ofImage pinkShirt;
+    ofImage pinkShoes;
+    ofImage purpleDress;
+    ofImage purpleShoes;
+    ofImage redDress;
+    ofImage jeans;
+    ofImage greenShirt;
+    ofImage shorts;
+  
 
     //position of the draggable item
     float itemX1, itemY1;

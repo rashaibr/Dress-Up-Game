@@ -21,14 +21,6 @@ void ofApp::setup() {
     // Set background color
     ofBackground(255); // White background
 
-    //load assets
-    characterBase.load("Untitled_Artwork.png");
-    clothingItem1.load("dress.png");
-    clothingItem2.load("dress.png");
-    clothingItem3.load("dress.png");
-    clothingItem4.load("dress.png");
-    clothingItem5.load("dress.png");
-
     //initial positions
     itemX1 = 200;
     itemY1 = 100;
@@ -45,22 +37,36 @@ void ofApp::setup() {
     itemX5 = 1000;
     itemY5 = 100;
 
+    characterBase.load("character.png");
+    pinkShirt.load("pinkShirt.png");
+    pinkShoes.load("pinkShoes.png");
+    jeans.load("jeans.png");
+    redDress.load("redDress.png");
+    purpleDress.load("purpleDress.png");
+    greenShirt.load("greenShirt.png");
+    shorts.load("shorts.png");
+    purpleShoes.load("purpleShoes.png");
+
     //list of clothing items
 
-    clothingItems.push_back(&clothingItem1);
-    clothingItems.push_back(&clothingItem2);
-    clothingItems.push_back(&clothingItem3);
-    clothingItems.push_back(&clothingItem4);
-    clothingItems.push_back(&clothingItem5);
+    clothingItems.push_back(&pinkShirt);
+    clothingItems.push_back(&pinkShoes);
+    clothingItems.push_back(&purpleDress);
+    clothingItems.push_back(&purpleShoes);
+    clothingItems.push_back(&jeans);
+    clothingItems.push_back(&redDress);
+    clothingItems.push_back(&greenShirt);
+    clothingItems.push_back(&shorts);
 
-    itemPositions.push_back(ofVec2f(itemX1, itemY1));
-    itemPositions.push_back(ofVec2f(itemX2, itemY2));
-    itemPositions.push_back(ofVec2f(itemX3, itemY3));
-    itemPositions.push_back(ofVec2f(itemX4, itemY4));
-    itemPositions.push_back(ofVec2f(itemX5, itemY5));
+
+    int xOffset = 200; // Horizontal offset for positioning
+    for (size_t i = 0; i < clothingItems.size(); ++i) {
+        itemPositions.push_back(ofVec2f(xOffset, 100));
+        xOffset += 200; // Increment position for the next item
+    }
+
     isDragging = false;
-
-    currentItemIndex = -1;  // No item is selected initially
+    currentItemIndex = -1; // No item is selected initially
 
     ofImage imageToSelect1, imageResult1;
     imageToSelect1.load("imageToSelect1.jpg");
@@ -140,46 +146,31 @@ void ofApp::draw() {
     */
 
     //draw the character base
-    UIBox characterSnapRegion;//(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+    //(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
     characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
-    characterSnapRegion.SetSize(windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+    characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
     characterSnapRegion.hitBox.setPosition(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
     characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
     
     ofPushMatrix();
         ofTranslate(characterSnapRegion.hitBox.getCenter());
-        ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
+        //ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
         //cout << windowScalePercentY(65.0f, characterBase.getHeight()) << '\n';
         ofSetRectMode(OF_RECTMODE_CENTER);
         characterBase.draw(0, 0);//characterBase.getWidth() * 0.20f, characterBase.getHeight() * 0.5f);
         ofSetRectMode(OF_RECTMODE_CORNER);
         //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
 
-    ofPopMatrix();
-    
-    //draw clothing items
-    //  for (size_t i = 0; i < clothingItems.size(); ++i) {
+    //characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
 
-    //    if (itemPositions[i] == characterSnapRegion.hitBox.getCenter() - (clothingItems[i]->getWidth() / 2))
-    //    {
-    //        ofSetColor(ofColor::black);
-    //        cout << "in center" << '\n';
-    //        ofPushMatrix();
-    //        ofTranslate(characterSnapRegion.hitBox.getCenter());// -(clothingItems[i]->getWidth() / 2));
-    //        ofScale((1.0f / clothingItems[i]->getHeight()) * characterSnapRegion.GetHeight() * 0.3f);
-    //        ofSetRectMode(OF_RECTMODE_CENTER);
-    //        clothingItems[i]->draw(0, 0);//clothingItems[i]->getWidth() * 0.5f, clothingItems[i]->getHeight() * 0.5f);
-    //        ofSetRectMode(OF_RECTMODE_CORNER);
-    //        ofPopMatrix();
-    //    }
-    //    
-    //    ofPushMatrix();
-    //    ofSetColor(ofColor::white);
-    //    ofTranslate(itemPositions[i]);
-    //    //ofScale((1.0f / clothingItems[i]->getHeight()) * 100);
-    //    clothingItems[i]->draw(0, 0);
-    //    ofPopMatrix();
-    //}
+
+    ofPopMatrix();
+
+    // Draw clothing items
+    for (size_t i = 0; i < clothingItems.size(); ++i) {
+        clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
+    }
+
 }
 
 //--------------------------------------------------------------
@@ -231,19 +222,24 @@ void ofApp::mouseDragged(int x, int y, int button) {
 void ofApp::mouseReleased(int x, int y, int button) {
     isDragging = false;
 
-    if (currentItemIndex != -1) {
-        // Define a snap region (the area where the clothing item can be placed)
-        float snapX = characterBase.getWidth() / 2 - clothingItems[currentItemIndex]->getWidth() / 2; // Center the item horizontally
-        float snapY = characterBase.getHeight() / 2 - clothingItems[currentItemIndex]->getHeight() / 2; // Center it vertically
+    if (currentItemIndex >= 0 && currentItemIndex < clothingItems.size()) {
+        // Define a snap region for clothing items to align to the character
+        float snapX = 600; // Example snap position (center of character)
+        float snapY = 300;
+
 
         //ofRectangle snapRegion(snapX, snapY, clothingItems[currentItemIndex]->getWidth(), clothingItems[currentItemIndex]->getHeight());
-        ofRectangle snapRegion(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
+        ofRectangle snapRegion(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
 
-        // Check if the mouse is inside the snap region
+        //ofRectangle snapRegion(snapX, snapY, characterBase.getWidth(), characterBase.getHeight());
+
+
+        // Check if the item is released within the snap region
         if (snapRegion.inside(x, y)) {
-            // Snap the item to the region (center it in the snap area)
-            itemPositions[currentItemIndex].x = snapRegion.getCenter().x - clothingItems[currentItemIndex]->getWidth() / 2;
-            itemPositions[currentItemIndex].y = snapRegion.getCenter().y - clothingItems[currentItemIndex]->getHeight() / 2;
+            // Center the item on the character base
+            //itemPositions[currentItemIndex].x = snapX + (characterBase.getWidth() - clothingItems[currentItemIndex]->getWidth()) / 2;
+            //itemPositions[currentItemIndex].y = snapY + (characterBase.getHeight() - clothingItems[currentItemIndex]->getHeight()) / 2;
+            itemPositions[currentItemIndex] = snapRegion.getCenter();
         }
     }
 
