@@ -86,6 +86,21 @@ void ofApp::update() {
     // Update logic if needed
     skinHairBox.SetPos(windowPosPercentX(35.0f), windowPosPercentY(12.0f));
     skinHairBox.SetSize(ofGetWindowWidth() * 0.5f, ofGetWindowHeight() * 0.2f);
+
+    //move dress if it's snapped to character
+    for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
+
+        if (itemPositions[i] == characterSnapRegion.hitBox.getCenter()) //if the item was snapped to center of character hitbox
+        {
+            //testing
+            //cout << "in center" << '\n';
+            //set the position of the corner of clothing image off center so it draws properly on the character
+            itemPositions[i].x = characterSnapRegion.hitBox.getCenter().x - (clothingItems[i]->getWidth() / 2);
+            itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
+            
+        }
+
+    }
 }
 
 //--------------------------------------------------------------
@@ -102,9 +117,6 @@ void ofApp::draw() {
     
     //character stand
     ofDrawRectangle(windowPosPercentX(5.0f), windowPosPercentY(75.0f), windowScalePercentX(25.0f, 1.0f), windowScalePercentY(30.0f, 1.0f));
-    
-    //character box
-    ofDrawRectangle(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
     
     //sking + hair box
     //ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(12.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(20.0f, 1.0f));
@@ -162,9 +174,10 @@ void ofApp::draw() {
         //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
 
     //characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
-
-
     ofPopMatrix();
+    
+    //character box
+    ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
 
     // Draw clothing items
     for (size_t i = 0; i < clothingItems.size(); ++i) {
