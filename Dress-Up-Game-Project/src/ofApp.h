@@ -2,6 +2,8 @@
 #include "ofMain.h"
 #include "ClickToSelect.h"
 #include "Headers.h"
+#include "ofxGui.h"
+
 
 class ofApp : public ofBaseApp {
 public:
@@ -69,4 +71,22 @@ public:
 
     //wether the item is being dragged
     bool isDragging;
+
+    // Declare a boolean to track if the menu is open
+    bool isMenuOpen;
+
+    // Declare the button position and size
+    ofRectangle menuButton;
+    ofRectangle resumeButton;
+    ofRectangle creditsButton;
+    ofRectangle quitButton;
+
+    // Declare the new window size and position
+    ofRectangle newWindow;
+
+    bool isCreditsOpen;           // Tracks if the credits window is open
+    ofRectangle creditsWindow;    // Rectangle for the credits popup
+    ofRectangle closeButton;      // Close button inside the credits popup
+
+
 };

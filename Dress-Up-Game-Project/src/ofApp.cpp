@@ -18,6 +18,29 @@ void ofApp::setup() {
     
     ofSetWindowPosition(x, y);
 
+    // Set up the Main Menu button
+    menuButton.set(50, 50, 200, 50); // Position and size of the button
+
+    float windowCenterX = ofGetWidth() / 2; // Horizontal center of the window
+    float windowCenterY = ofGetHeight() / 2; // Vertical center of the window
+    float buttonWidth = 200; // Button width
+    float buttonHeight = 40; // Button height
+    float spacing = 20; // Spacing between buttons
+
+    resumeButton.set(windowCenterX - buttonWidth / 2, windowCenterY - (buttonHeight + spacing) * 1.5, buttonWidth, buttonHeight); // Centered "Resume Game"
+    creditsButton.set(windowCenterX - buttonWidth / 2, windowCenterY - buttonHeight / 2, buttonWidth, buttonHeight); // Centered "Credits"
+    quitButton.set(windowCenterX - buttonWidth / 2, windowCenterY + (buttonHeight + spacing) * 1.5, buttonWidth, buttonHeight); // Centered "Quit"
+    // Initialize the menu state to be closed
+    isMenuOpen = false;
+
+
+    isCreditsOpen = false;
+    creditsWindow.set(400, 200, 250, 200); // Position and size of the credits popup
+    closeButton.set(creditsWindow.getRight() - 100, creditsWindow.getTop() + 20, 80, 30); // Close button position
+
+    // Create the new window that will open (initially hidden)
+    newWindow.set(50, 150, 247, 250); // Position and size of the new window
+
     // Set background color
     ofBackground(255); // White background
 
@@ -183,6 +206,13 @@ void ofApp::draw() {
     
     //character box
     ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    // Draw the button (Main Menu)
+    ofSetColor(ofColor::deepPink);
+    ofDrawRectangle(menuButton); // Draw the button
+
+    // Draw the label inside the button
+    ofSetColor(ofColor::white);
+    ofDrawBitmapString("Main Menu", menuButton.getCenter().x - 40, menuButton.getCenter().y);
 
     //top clothing
     for (int i = 0; i < 4; i++)
@@ -237,8 +267,54 @@ void ofApp::draw() {
         }
         else
         {*/
-            clothingItems[i]->draw(itemPositions[i]);
+            //clothingItems[i]->draw(itemPositions[i]);
         //}
+
+        ofSetColor(ofColor::white);
+
+        clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
+    }
+
+    // If the menu is open, draw the new window
+    if (isMenuOpen) {
+        // Update button positions dynamically based on newWindow's position
+        resumeButton.set(newWindow.x + 20, newWindow.y + 60, 200, 40);
+        creditsButton.set(newWindow.x + 20, newWindow.y + 110, 200, 40);
+        quitButton.set(newWindow.x + 20, newWindow.y + 160, 200, 40);
+
+        // Draw the new window
+        ofSetColor(ofColor::white);
+        ofDrawRectangle(newWindow);
+
+        // Draw buttons inside the window
+        ofSetColor(ofColor::deepPink);
+        ofDrawRectangle(resumeButton);
+        ofDrawRectangle(creditsButton);
+        ofDrawRectangle(quitButton);
+
+        // Draw button labels
+        ofSetColor(ofColor::white);
+        ofDrawBitmapString("Resume Game", resumeButton.getCenter().x - 50, resumeButton.getCenter().y + 5);
+        ofDrawBitmapString("Credits", creditsButton.getCenter().x - 30, creditsButton.getCenter().y + 5);
+        ofDrawBitmapString("Quit", quitButton.getCenter().x - 20, quitButton.getCenter().y + 5);
+    }
+
+    if (isCreditsOpen) {
+        // Draw the credits window
+        ofSetColor(ofColor::white);
+        ofDrawRectangle(creditsWindow);
+
+        // Draw the close button
+        ofSetColor(ofColor::white);
+        ofDrawRectangle(closeButton);
+        ofSetColor(ofColor::black);
+
+        // Draw the credits text
+        ofSetColor(ofColor::deepPink);
+        ofDrawBitmapString("Game Credits:", creditsWindow.x + 20, creditsWindow.y + 50);
+        ofDrawBitmapString("Racha Ibrahim", creditsWindow.x + 20, creditsWindow.y + 80);
+        ofDrawBitmapString("Hairuo Chen", creditsWindow.x + 20, creditsWindow.y + 110);
+        ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
     }
 
 }
@@ -270,7 +346,33 @@ void ofApp::mousePressed(int x, int y, int button) {
             return; // Exit the loop as soon as the item is found
         }
     }
+
+    // Check if the mouse is inside the Main Menu button
+    if (menuButton.inside(x, y)) {
+        isMenuOpen = !isMenuOpen; // Toggle the menu state
+        return; // Prevent further checks if the main menu button was clicked
+    }
+
+    if (isMenuOpen) {
+        if (resumeButton.inside(x, y)) {
+            isMenuOpen = false; // Close the menu
+        }
+        else if (creditsButton.inside(x, y)) {
+            isCreditsOpen = !isCreditsOpen;
+            return;
+        }
+        else if (quitButton.inside(x, y)) {
+            ofExit(); // Quit the game
+        }
+    }
+
+    if (isCreditsOpen && closeButton.inside(x, y)) {
+        isCreditsOpen = false; // Close the credits popup
+    }
+    
+
 }
+
 
 
 //--------------------------------------------------------------
