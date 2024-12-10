@@ -100,6 +100,11 @@ void ofApp::setup() {
 
     ofLogNotice() << "Setup complete. Clickable images initialized.";
 
+    //hair buttons
+    HairButtons.push_back(ofImage("Frame_1.png"));
+    HairButtons.push_back(ofImage("Frame_2.png"));
+    HairButtons.push_back(ofImage("Frame_3.png"));
+
     //layout setup
     layoutRef.load("layout_main_ref.jpg");
 }
@@ -107,8 +112,8 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update() {
     // Update logic if needed
-    skinHairBox.SetPos(windowPosPercentX(35.0f), windowPosPercentY(12.0f));
-    skinHairBox.SetSize(ofGetWindowWidth() * 0.5f, ofGetWindowHeight() * 0.2f);
+    skinHairBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(12.0f));
+    skinHairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.15f);
 
     //move dress if it's snapped to character
     for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
@@ -131,8 +136,8 @@ void ofApp::update() {
     characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
 
     //clothing box
-    clothesBox.SetPos(windowPosPercentX(35.0f), windowPosPercentY(35.0f));
-    clothesBox.SetSize(ofGetWindowWidth() * 0.5f, ofGetWindowHeight() * 0.5f);
+    clothesBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(38.0f));
+    clothesBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.6f);
 }
 
 //--------------------------------------------------------------
@@ -158,23 +163,26 @@ void ofApp::draw() {
     ofDrawRectangle(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight());
 
     //top icons
-    ofDrawRectangle(windowPosPercentX(75.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
-    ofDrawRectangle(windowPosPercentX(85.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+    ofDrawRectangle(ofGetWindowWidth() - windowScalePercentY(10.0f, 1.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+    ofDrawRectangle(ofGetWindowWidth() - (windowScalePercentY(10.0f, 1.0f) * 2.2), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
 
     //bottom icons
-    ofDrawRectangle(windowPosPercentX(85.0f), windowPosPercentY(88.0f), windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+    ofDrawRectangle(ofGetWindowWidth() - windowScalePercentX(10.0f, 1.0f), windowPosPercentY(88.0f), windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
 
     ofSetColor(ofColor(0, 0, 255, 128));
 
     //skintone boxes
     for (int i = 0; i < 7; i++)//SkinTones.size(); i++)
     {
-        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetPosX() * 0.4f) + skinHairBox.GetPosX() * 0.15f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f);
+        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f);
     }
     //hair boxes
     for (int i = 0; i < 3; i++)//HairLenghts.size(); i++)
     {
-        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetPosX() * 0.4f) + skinHairBox.GetPosX() * 0.35f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
+        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
+        ofSetColor(ofColor(255));
+        HairButtons[i].draw((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
+        ofSetColor(ofColor(0, 0, 255, 128));
     }
 
     /*
@@ -232,7 +240,7 @@ void ofApp::draw() {
     //bottom clothing
     for (int i = 0; i < 4; i++)
     {
-        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.4f);
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
         bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
         
         if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))

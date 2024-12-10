@@ -25,6 +25,7 @@ public:
 
     vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
     vector<ClickToSelect> SkinTones;//store the skin tones 
+    vector<ofImage> HairButtons;
 
     //layout data
     ofImage layoutRef;
