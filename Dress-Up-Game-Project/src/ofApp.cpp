@@ -107,6 +107,9 @@ void ofApp::setup() {
 
     //layout setup
     layoutRef.load("layout_main_ref.jpg");
+
+    //load reset image
+    restartImage.load("restart.png");
 }
 
 //--------------------------------------------------------------
@@ -138,6 +141,12 @@ void ofApp::update() {
     //clothing box
     clothesBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(38.0f));
     clothesBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.6f);
+
+    //reset box
+    restartBox.SetPos(ofGetWindowWidth() - (windowScalePercentY(10.0f, 1.0f) * 2.2), windowPosPercentY(1.0f));
+    restartBox.SetSize(windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+    restartBox.hitBox.setPosition(restartBox.GetPosX(), restartBox.GetPosY());
+    restartBox.hitBox.setSize(restartBox.GetWidth(), restartBox.GetHeight());
 }
 
 //--------------------------------------------------------------
@@ -163,8 +172,15 @@ void ofApp::draw() {
     ofDrawRectangle(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight());
 
     //top icons
+    ofDrawRectangle(restartBox.GetPos(), restartBox.GetWidth(), restartBox.GetHeight());
+    ofSetColor(255);
+    ofPushMatrix();
+    ofTranslate(restartBox.GetPos());
+    ofScale(1.0f / restartImage.getWidth() * restartBox.GetWidth());
+    restartImage.draw(0, 0);
+    ofPopMatrix();
+    ofSetColor(ofColor(255, 0, 0, 128));
     ofDrawRectangle(ofGetWindowWidth() - windowScalePercentY(10.0f, 1.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
-    ofDrawRectangle(ofGetWindowWidth() - (windowScalePercentY(10.0f, 1.0f) * 2.2), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
 
     //bottom icons
     ofDrawRectangle(ofGetWindowWidth() - windowScalePercentX(10.0f, 1.0f), windowPosPercentY(88.0f), windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
@@ -378,7 +394,27 @@ void ofApp::mousePressed(int x, int y, int button) {
         isCreditsOpen = false; // Close the credits popup
     }
     
+    // if the player hits the restart button
+    if (restartBox.hitBox.inside(x, y))
+    {
+        //top clothes
+        for (int i = 0; i < 4; i++)
+        {
 
+            topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+            topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+            itemPositions[i] = topClothesBox.GetPos();
+        }
+
+        //bottom clothes
+        for (int i = 0; i < 4; i++)
+        {
+            bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+            bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+            itemPositions[i + 4] = bottomClothesBox.GetPos();
+        }
+
+    }
 }
 
 

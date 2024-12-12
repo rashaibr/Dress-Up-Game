@@ -39,6 +39,9 @@ public:
     UIBox topClothesBox;
     UIBox bottomClothesBox;
     UIBox characterSnapRegion;
+    
+    ofImage restartImage;
+    UIBox restartBox;
 
     //variables for the character and items
 
