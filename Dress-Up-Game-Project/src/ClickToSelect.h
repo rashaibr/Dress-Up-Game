@@ -10,6 +10,9 @@ public:
     void toggleResult(); // Toggle the result image's display state
     void displayResultImage(float x, float y); // Conditionally display the result image
 
+    bool isToggled() const;  // New method to check if toggled
+    void disable();          // New method to disable
+
 private:
     ofImage imageToSelect;    // Initial clickable image
     ofImage imageResult;      // Image to display on toggle
