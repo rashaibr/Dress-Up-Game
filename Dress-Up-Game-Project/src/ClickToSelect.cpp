@@ -28,3 +28,13 @@ void ClickToSelect::displayResultImage(float x, float y) {
         imageResult.draw(x, y);
     }
 }
+
+// Check if the object is toggled on
+bool ClickToSelect::isToggled() const {
+    return isClicked;
+}
+
+// Disable the toggling
+void ClickToSelect::disable() {
+    isClicked = false;
+}

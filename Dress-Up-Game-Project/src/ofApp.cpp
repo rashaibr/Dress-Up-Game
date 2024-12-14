@@ -91,12 +91,26 @@ void ofApp::setup() {
     isDragging = false;
     currentItemIndex = -1; // No item is selected initially
 
-    ofImage imageToSelect1, imageResult1;
-    imageToSelect1.load("imageToSelect1.jpg");
-    imageResult1.load("imageResult1.jpg");
+    // Load the ClickToSelect images
+    //
+    //
+    //
 
-    // Add the interactive image to the vector
-    ClickToSelectImages.push_back(ClickToSelect(imageToSelect1, imageResult1, 50, 50));
+    // Add the interactive image to the Hairstyles vector
+    Hairstyles.push_back(ClickToSelect(blondButton, blond, 50, 50));
+    Hairstyles.push_back(ClickToSelect(redButton, red, 50, 50));
+    Hairstyles.push_back(ClickToSelect(brownButton, brown, 50, 50));
+
+    // Add the interactive image to the Accessories vector
+    Accessories.push_back(ClickToSelect(goldButton, gold, 50, 50));
+    Accessories.push_back(ClickToSelect(silverButton, silver, 50, 50));
+    Accessories.push_back(ClickToSelect(whiteButton, white, 50, 50));
+
+    // Add the interactive image to the Backgrounds vector
+    Backgrounds.push_back(ClickToSelect(bg1Button, bg1, 50, 50));
+    Backgrounds.push_back(ClickToSelect(bg2Button, bg2, 50, 50));
+    Backgrounds.push_back(ClickToSelect(bg3Button, bg3, 50, 50));
+    Backgrounds.push_back(ClickToSelect(bg4Button, bg4, 50, 50));
 
     ofLogNotice() << "Setup complete. Clickable images initialized.";
 
@@ -262,12 +276,9 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-    // Toggle the state of the clicked image
-    for (int i = 0; i < ClickToSelectImages.size(); i++) {
-        if (ClickToSelectImages[i].isMouseInside(x, y)) {
-            ClickToSelectImages[i].toggleResult();
-        }
-    }
+    handleGroupClick(Hairstyles, x, y);
+    handleGroupClick(Accessories, x, y);
+    handleGroupClick(Backgrounds, x, y);
 
     isDragging = false;       // Reset dragging state
     currentItemIndex = -1;    // Reset selected item index
@@ -313,8 +324,6 @@ void ofApp::mousePressed(int x, int y, int button) {
     
 
 }
-
-
 
 //--------------------------------------------------------------
 // Remaining event methods
@@ -383,4 +392,25 @@ float ofApp::windowScalePercentX(float percent, float originalWidth)
 float ofApp::windowScalePercentY(float percent, float originalHeight)
 {
     return ((1.0f / originalHeight) * (ofGetWindowHeight() * (percent / 100.0f)));
+}
+
+void ofApp::handleGroupClick(vector<ClickToSelect>& group, int x, int y) {
+    bool toggled = false;
+
+    // Check which image in the group is clicked
+    for (int i = 0; i < group.size(); i++) {
+        if (group[i].isMouseInside(x, y)) {
+            group[i].toggleResult();
+            toggled = group[i].isToggled();
+        }
+    }
+
+    // Disable other images in the group if one is toggled
+    if (toggled) {
+        for (int i = 0; i < group.size(); i++) {
+            if (!group[i].isMouseInside(x, y)) {
+                group[i].disable();
+            }
+        }
+    }
 }
