@@ -13,6 +13,8 @@ public:
     bool isToggled() const;  // New method to check if toggled
     void disable();          // New method to disable
 
+    void setPos(float x, float y);
+
 private:
     ofImage imageToSelect;    // Initial clickable image
     ofImage imageResult;      // Image to display on toggle

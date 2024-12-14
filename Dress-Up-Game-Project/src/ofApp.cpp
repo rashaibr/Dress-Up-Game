@@ -99,12 +99,31 @@ void ofApp::setup() {
     currentItemIndex = -1; // No item is selected initially
 
     // Load the ClickToSelect images
-    //
-    //
-    //
+    blond.load("blond.png");
+    blondButton.load("blondButton.png");
+   /* red;
+    redButton;
+    brown;
+    brownButton;
+
+    gold;
+    goldButton;
+    silver;
+    silverButton;
+    white;
+    whiteButton;
+
+    bg1;
+    bg1Button;
+    bg2;
+    bg2Button;
+    bg3;
+    bg3Button;
+    bg4;
+    bg4Button;*/
 
     // Add the interactive image to the Hairstyles vector
-    Hairstyles.push_back(ClickToSelect(blondButton, blond, 50, 50));
+    Hairstyles.push_back(ClickToSelect(blondButton, blond, skinHairBox.GetPosX() + (skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f));
     Hairstyles.push_back(ClickToSelect(redButton, red, 50, 50));
     Hairstyles.push_back(ClickToSelect(brownButton, brown, 50, 50));
 
@@ -218,7 +237,7 @@ void ofApp::draw() {
     {
         ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
         ofSetColor(ofColor(255));
-        //HairButtons[i].draw((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
+        Hairstyles[i].draw();//((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
         ofSetColor(ofColor(0, 0, 255, 128));
     }
 

@@ -38,3 +38,10 @@ bool ClickToSelect::isToggled() const {
 void ClickToSelect::disable() {
     isClicked = false;
 }
+
+// Set the position of the object
+void ClickToSelect::setPos(float x, float y)
+{
+    hitBox.x = x;
+    hitBox.y = y;
+}
