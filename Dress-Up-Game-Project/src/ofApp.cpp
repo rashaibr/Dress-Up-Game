@@ -116,6 +116,16 @@ void ofApp::setup() {
 
     //layout setup
     layoutRef.load("layout_main_ref.jpg");
+
+    // Load background music
+    backgroundMusic.load("backgroundMusic.mp3"); // Make sure to place the audio file in the correct folder
+    backgroundMusic.setLoop(true);
+    backgroundMusic.play();
+    isMusicPlaying = true;
+
+    // Load the music toggle button image
+    musicButton.load("musicButton.png");
+    musicButtonRect.set(50, 50, musicButton.getWidth(), musicButton.getHeight()); // Adjust position and size
 }
 
 //--------------------------------------------------------------
@@ -272,6 +282,7 @@ void ofApp::draw() {
         ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
     }
 
+    musicButton.draw(musicButtonRect);
 }
 
 //--------------------------------------------------------------
@@ -322,7 +333,9 @@ void ofApp::mousePressed(int x, int y, int button) {
         isCreditsOpen = false; // Close the credits popup
     }
     
-
+    if (musicButtonRect.inside(x, y)) {
+        toggleBackgroundMusic();  // Toggle music when the button is clicked
+    }
 }
 
 //--------------------------------------------------------------
@@ -413,4 +426,14 @@ void ofApp::handleGroupClick(vector<ClickToSelect>& group, int x, int y) {
             }
         }
     }
+}
+
+void ofApp::toggleBackgroundMusic() {
+    if (isMusicPlaying) {
+        backgroundMusic.stop();
+    }
+    else {
+        backgroundMusic.play();
+    }
+    isMusicPlaying = !isMusicPlaying;
 }

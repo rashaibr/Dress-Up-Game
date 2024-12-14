@@ -111,5 +111,13 @@ public:
     ofRectangle creditsWindow;    // Rectangle for the credits popup
     ofRectangle closeButton;      // Close button inside the credits popup
 
+    // Background music toggle
+    ofImage musicButton;
+    ofRectangle musicButtonRect;
 
+    void toggleBackgroundMusic();
+
+    // Add sound player for background music
+    ofSoundPlayer backgroundMusic;
+    bool isMusicPlaying; // To track the music state
 };
