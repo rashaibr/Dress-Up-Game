@@ -125,7 +125,7 @@ void ofApp::setup() {
 
     // Load the music toggle button image
     musicButton.load("musicButton.png");
-    musicButtonRect.set(50, 50, musicButton.getWidth(), musicButton.getHeight()); // Adjust position and size
+    musicButtonRect.set(500, 50, musicButton.getWidth(), musicButton.getHeight()); // Adjust position and size
 }
 
 //--------------------------------------------------------------
@@ -282,7 +282,8 @@ void ofApp::draw() {
         ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
     }
 
-    musicButton.draw(musicButtonRect);
+    //ofSetColor(ofColor::green); // Choose a color for the music button
+    musicButton.draw(musicButtonRect); // Draw the music button at its specified position
 }
 
 //--------------------------------------------------------------
