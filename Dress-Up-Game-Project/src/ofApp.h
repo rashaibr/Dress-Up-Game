@@ -77,13 +77,17 @@ public:
     //variables for the character and items
 
     ofImage characterBase;
+    
+    //tops
     ofImage pinkShirt;
-    ofImage pinkShoes;
     ofImage purpleDress;
-    ofImage purpleShoes;
     ofImage redDress;
-    ofImage jeans;
     ofImage greenShirt;
+    //feet
+    ofImage pinkShoes;
+    ofImage purpleShoes;
+    //pants
+    ofImage jeans;
     ofImage shorts;
   
 

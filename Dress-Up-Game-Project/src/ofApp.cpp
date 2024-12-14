@@ -61,24 +61,31 @@ void ofApp::setup() {
     itemY5 = 100;
 
     characterBase.load("character.png");
+    
+    //tops
     pinkShirt.load("pinkShirt.png");
-    pinkShoes.load("pinkShoes.png");
-    jeans.load("jeans.png");
-    redDress.load("redDress.png");
     purpleDress.load("purpleDress.png");
+    redDress.load("redDress.png");
     greenShirt.load("greenShirt.png");
-    shorts.load("shorts.png");
+    //feet
+    pinkShoes.load("pinkShoes.png");
     purpleShoes.load("purpleShoes.png");
+    //pants
+    jeans.load("jeans.png");
+    shorts.load("shorts.png");
 
     //list of clothing items
 
+    //tops
     clothingItems.push_back(&pinkShirt);
-    clothingItems.push_back(&pinkShoes);
     clothingItems.push_back(&purpleDress);
-    clothingItems.push_back(&purpleShoes);
-    clothingItems.push_back(&jeans);
     clothingItems.push_back(&redDress);
     clothingItems.push_back(&greenShirt);
+    //feet
+    clothingItems.push_back(&pinkShoes);
+    clothingItems.push_back(&purpleShoes);
+    //pants
+    clothingItems.push_back(&jeans);
     clothingItems.push_back(&shorts);
 
 
@@ -115,9 +122,9 @@ void ofApp::setup() {
     ofLogNotice() << "Setup complete. Clickable images initialized.";
 
     //hair buttons
-    HairButtons.push_back(ofImage("Frame_1.png"));
-    HairButtons.push_back(ofImage("Frame_2.png"));
-    HairButtons.push_back(ofImage("Frame_3.png"));
+    //HairButtons.push_back(ofImage("Frame_1.png"));
+    //HairButtons.push_back(ofImage("Frame_2.png"));
+    //HairButtons.push_back(ofImage("Frame_3.png"));
 
     //layout setup
     layoutRef.load("layout_main_ref.jpg");
@@ -211,7 +218,7 @@ void ofApp::draw() {
     {
         ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
         ofSetColor(ofColor(255));
-        HairButtons[i].draw((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
+        //HairButtons[i].draw((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
         ofSetColor(ofColor(0, 0, 255, 128));
     }
 
