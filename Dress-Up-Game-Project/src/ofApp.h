@@ -23,9 +23,40 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
-    vector<ClickToSelect> SkinTones;//store the skin tones 
-    vector<ofImage> HairButtons;
+// <<<<<<< HEAD
+//     vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
+//     vector<ClickToSelect> SkinTones;//store the skin tones 
+//     vector<ofImage> HairButtons;
+// =======
+    vector<ClickToSelect> Hairstyles;
+    vector<ClickToSelect> Accessories;
+    vector<ClickToSelect> Backgrounds;
+
+    ofImage blond;
+    ofImage blondButton;
+    ofImage red;
+    ofImage redButton;
+    ofImage brown;
+    ofImage brownButton;
+
+    ofImage gold;
+    ofImage goldButton;
+    ofImage silver;
+    ofImage silverButton;
+    ofImage white;
+    ofImage whiteButton;
+
+    ofImage bg1;
+    ofImage bg1Button;
+    ofImage bg2;
+    ofImage bg2Button;
+    ofImage bg3;
+    ofImage bg3Button;
+    ofImage bg4;
+    ofImage bg4Button;
+
+    void handleGroupClick(vector<ClickToSelect> &group, int x, int y);
+//>>>>>>> main
 
     //layout data
     ofImage layoutRef;
