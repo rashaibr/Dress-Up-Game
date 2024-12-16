@@ -148,8 +148,20 @@ void ofApp::setup() {
     //layout setup
     layoutRef.load("layout_main_ref.jpg");
 
+
     //load reset image
     restartImage.load("restart.png");
+
+    // Load background music
+    backgroundMusic.load("backgroundMusic.mp3"); // Make sure to place the audio file in the correct folder
+    backgroundMusic.setLoop(true);
+    backgroundMusic.play();
+    isMusicPlaying = true;
+
+    // Load the music toggle button image
+    musicButton.load("musicButton.png");
+    musicButtonRect.set(500, 50, musicButton.getWidth(), musicButton.getHeight()); // Adjust position and size
+
 }
 
 //--------------------------------------------------------------
@@ -427,6 +439,8 @@ void ofApp::draw() {
         ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
     }
 
+    //ofSetColor(ofColor::green); // Choose a color for the music button
+    musicButton.draw(musicButtonRect); // Draw the music button at its specified position
 }
 
 //--------------------------------------------------------------
@@ -499,6 +513,10 @@ void ofApp::mousePressed(int x, int y, int button) {
         groupClickDisable(Hairstyles);
         groupClickDisable(Accessories);
         groupClickDisable(Backgrounds);
+
+    if (musicButtonRect.inside(x, y)) {
+        toggleBackgroundMusic();  // Toggle music when the button is clicked
+
     }
 }
 
@@ -599,3 +617,14 @@ void ofApp::groupClickDisable(vector<ClickToSelect>& group) {
         group[i].disable();
     }
 }
+
+void ofApp::toggleBackgroundMusic() {
+    if (isMusicPlaying) {
+        backgroundMusic.stop();
+    }
+    else {
+        backgroundMusic.play();
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
