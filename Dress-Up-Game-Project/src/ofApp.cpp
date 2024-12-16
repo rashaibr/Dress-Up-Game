@@ -168,7 +168,7 @@ void ofApp::setup() {
 void ofApp::update() {
     // Update logic if needed
     skinHairBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(12.0f));
-    skinHairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.15f);
+    skinHairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.25f);
 
     //move dress if it's snapped to character
     for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
@@ -215,32 +215,36 @@ void ofApp::update() {
     restartBox.SetSize(windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
     restartBox.hitBox.setPosition(restartBox.GetPosX(), restartBox.GetPosY());
     restartBox.hitBox.setSize(restartBox.GetWidth(), restartBox.GetHeight());
+
+    //music box
+    musicButtonRect.setPosition(ofGetWindowWidth() - windowScalePercentY(10.0f, 1.0f), windowPosPercentY(1.0f));
+    musicButtonRect.setSize(windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
     // draw layout
     ofPushMatrix();
-        //scale background to the height of our window
-        ofScale((1.0f / layoutRef.getHeight()) * ofGetWindowHeight());
-        ofSetColor(ofColor(255));
-        //layoutRef.draw(0.0f, 0.0f);
+    //scale background to the height of our window
+    ofScale((1.0f / layoutRef.getHeight()) * ofGetWindowHeight());
+    ofSetColor(ofColor(255));
+    //layoutRef.draw(0.0f, 0.0f);
     ofPopMatrix();
     ofBackground(128);
     ofSetColor(ofColor(255, 0, 0, 128));
-    
+
     //draw backgrounds
     for (int i = 0; i < Backgrounds.size(); i++)
     {
         ofPushMatrix();
-            ofScale((1.0f / Backgrounds[i].getDisplayWidth()) * ofGetWindowWidth());
-            Backgrounds[i].displayResultImage(0.0f, 0.0f);
+        ofScale((1.0f / Backgrounds[i].getDisplayWidth()) * ofGetWindowWidth());
+        Backgrounds[i].displayResultImage(0.0f, 0.0f);
         ofPopMatrix();
     }
 
     //character stand
     ofDrawRectangle(windowPosPercentX(5.0f), windowPosPercentY(75.0f), windowScalePercentX(25.0f, 1.0f), windowScalePercentY(30.0f, 1.0f));
-    
+
     //sking + hair box
     //ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(12.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(20.0f, 1.0f));
     ofDrawRectangle(skinHairBox.GetPos(), skinHairBox.GetWidth(), skinHairBox.GetHeight());
@@ -302,17 +306,17 @@ void ofApp::draw() {
 
     //draw the character base
     //(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
-    
-    ofPushMatrix();
-        ofTranslate(characterSnapRegion.hitBox.getCenter());
-        //ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
-        //cout << windowScalePercentY(65.0f, characterBase.getHeight()) << '\n';
-        ofSetRectMode(OF_RECTMODE_CENTER);
-        characterBase.draw(0, 0);//characterBase.getWidth() * 0.20f, characterBase.getHeight() * 0.5f);
-        ofSetRectMode(OF_RECTMODE_CORNER);
-        //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
 
-    //characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
+    ofPushMatrix();
+    ofTranslate(characterSnapRegion.hitBox.getCenter());
+    //ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
+    //cout << windowScalePercentY(65.0f, characterBase.getHeight()) << '\n';
+    ofSetRectMode(OF_RECTMODE_CENTER);
+    characterBase.draw(0, 0);//characterBase.getWidth() * 0.20f, characterBase.getHeight() * 0.5f);
+    ofSetRectMode(OF_RECTMODE_CORNER);
+    //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
+
+//characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
     ofPopMatrix();
 
     //character box
@@ -328,10 +332,10 @@ void ofApp::draw() {
     //top clothing
     for (int i = 0; i < 4; i++)
     {
-        
+
         topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
         topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-        
+
         if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
         {
             itemPositions[i] = topClothesBox.GetPos();
@@ -345,41 +349,41 @@ void ofApp::draw() {
     {
         bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
         bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-        
+
         if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
         {
             itemPositions[i + 4] = bottomClothesBox.GetPos();
         }
-        
+
         ofDrawRectangle(bottomClothesBox.GetPos(), bottomClothesBox.GetWidth(), bottomClothesBox.GetHeight());
     }
 
     // Draw clothing items
     for (size_t i = 0; i < clothingItems.size(); ++i) {
 
-      /*  if (!characterSnapRegion.hitBox.inside(itemPositions[i]))
-        {
-            if (clothingItems[i]->getHeight() > topClothesBox.GetHeight())
-            {
-                ofPushMatrix();
-                ofTranslate(itemPositions[i]);
-                ofScale(1.0f / clothingItems[i]->getHeight() * topClothesBox.GetHeight());
-                clothingItems[i]->draw(0, 0);
-                ofPopMatrix();
-            }
-            else if (clothingItems[i]->getWidth() > topClothesBox.GetWidth())
-            {
-                ofPushMatrix();
-                ofTranslate(itemPositions[i]);
-                ofScale(1.0f / clothingItems[i]->getWidth() * topClothesBox.GetWidth());
-                clothingItems[i]->draw(0,0);
-                ofPopMatrix();
-            }
-        }
-        else
-        {*/
-            //clothingItems[i]->draw(itemPositions[i]);
-        //}
+        /*  if (!characterSnapRegion.hitBox.inside(itemPositions[i]))
+          {
+              if (clothingItems[i]->getHeight() > topClothesBox.GetHeight())
+              {
+                  ofPushMatrix();
+                  ofTranslate(itemPositions[i]);
+                  ofScale(1.0f / clothingItems[i]->getHeight() * topClothesBox.GetHeight());
+                  clothingItems[i]->draw(0, 0);
+                  ofPopMatrix();
+              }
+              else if (clothingItems[i]->getWidth() > topClothesBox.GetWidth())
+              {
+                  ofPushMatrix();
+                  ofTranslate(itemPositions[i]);
+                  ofScale(1.0f / clothingItems[i]->getWidth() * topClothesBox.GetWidth());
+                  clothingItems[i]->draw(0,0);
+                  ofPopMatrix();
+              }
+          }
+          else
+          {*/
+          //clothingItems[i]->draw(itemPositions[i]);
+      //}
 
         ofSetColor(ofColor::white);
 
@@ -439,86 +443,94 @@ void ofApp::draw() {
         ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
     }
 
-    //ofSetColor(ofColor::green); // Choose a color for the music button
+    if (!isMusicPlaying)
+    {
+        ofSetColor(ofColor::grey); // Choose a color for the music button when disabled
+    }
+    else
+    {
+        ofSetColor(ofColor::white);
+    }
     musicButton.draw(musicButtonRect); // Draw the music button at its specified position
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button) {
-    handleGroupClick(Hairstyles, x, y);
-    handleGroupClick(Accessories, x, y);
-    handleGroupClick(Backgrounds, x, y);
+    void ofApp::mousePressed(int x, int y, int button) {
+        handleGroupClick(Hairstyles, x, y);
+        handleGroupClick(Accessories, x, y);
+        handleGroupClick(Backgrounds, x, y);
 
-    isDragging = false;       // Reset dragging state
-    currentItemIndex = -1;    // Reset selected item index
+        isDragging = false;       // Reset dragging state
+        currentItemIndex = -1;    // Reset selected item index
 
-    // Loop through clothing items to check if the mouse click is within their bounds
-    for (size_t i = 0; i < clothingItems.size(); i++) {
-        // Calculate the item's bounds
-        float itemLeft = itemPositions[i].x;
-        float itemRight = itemPositions[i].x + clothingItems[i]->getWidth();
-        float itemTop = itemPositions[i].y;
-        float itemBottom = itemPositions[i].y + clothingItems[i]->getHeight();
+        // Loop through clothing items to check if the mouse click is within their bounds
+        for (size_t i = 0; i < clothingItems.size(); i++) {
+            // Calculate the item's bounds
+            float itemLeft = itemPositions[i].x;
+            float itemRight = itemPositions[i].x + clothingItems[i]->getWidth();
+            float itemTop = itemPositions[i].y;
+            float itemBottom = itemPositions[i].y + clothingItems[i]->getHeight();
 
-        // Check if the click is inside the bounds of the item
-        if (x >= itemLeft && x <= itemRight && y >= itemTop && y <= itemBottom) {
-            isDragging = true;
-            currentItemIndex = i; // Set the index of the clicked item
-            return; // Exit the loop as soon as the item is found
+            // Check if the click is inside the bounds of the item
+            if (x >= itemLeft && x <= itemRight && y >= itemTop && y <= itemBottom) {
+                isDragging = true;
+                currentItemIndex = i; // Set the index of the clicked item
+                return; // Exit the loop as soon as the item is found
+            }
         }
-    }
 
-    // Check if the mouse is inside the Main Menu button
-    if (menuButton.inside(x, y)) {
-        isMenuOpen = !isMenuOpen; // Toggle the menu state
-        return; // Prevent further checks if the main menu button was clicked
-    }
+        // Check if the mouse is inside the Main Menu button
+        if (menuButton.inside(x, y)) {
+            isMenuOpen = !isMenuOpen; // Toggle the menu state
+            return; // Prevent further checks if the main menu button was clicked
+        }
 
-    if (isMenuOpen) {
-        if (resumeButton.inside(x, y)) {
-            isMenuOpen = false; // Close the menu
+        if (isMenuOpen) {
+            if (resumeButton.inside(x, y)) {
+                isMenuOpen = false; // Close the menu
+            }
+            else if (creditsButton.inside(x, y)) {
+                isCreditsOpen = !isCreditsOpen;
+                return;
+            }
+            else if (quitButton.inside(x, y)) {
+                ofExit(); // Quit the game
+            }
         }
-        else if (creditsButton.inside(x, y)) {
-            isCreditsOpen = !isCreditsOpen;
-            return;
-        }
-        else if (quitButton.inside(x, y)) {
-            ofExit(); // Quit the game
-        }
-    }
 
-    if (isCreditsOpen && closeButton.inside(x, y)) {
-        isCreditsOpen = false; // Close the credits popup
-    }
-    
-    // if the player hits the restart button
-    if (restartBox.hitBox.inside(x, y))
-    {
-        //top clothes
-        for (int i = 0; i < 4; i++)
+        if (isCreditsOpen && closeButton.inside(x, y)) {
+            isCreditsOpen = false; // Close the credits popup
+        }
+
+        // if the player hits the restart button
+        if (restartBox.hitBox.inside(x, y))
         {
+            //top clothes
+            for (int i = 0; i < 4; i++)
+            {
 
-            topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
-            topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-            itemPositions[i] = topClothesBox.GetPos();
+                topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+                topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+                itemPositions[i] = topClothesBox.GetPos();
+            }
+
+            //bottom clothes
+            for (int i = 0; i < 4; i++)
+            {
+                bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+                bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+                itemPositions[i + 4] = bottomClothesBox.GetPos();
+            }
+            groupClickDisable(Hairstyles);
+            groupClickDisable(Accessories);
+            groupClickDisable(Backgrounds);
+
         }
 
-        //bottom clothes
-        for (int i = 0; i < 4; i++)
-        {
-            bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
-            bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-            itemPositions[i + 4] = bottomClothesBox.GetPos();
+        if (musicButtonRect.inside(x, y)) {
+            toggleBackgroundMusic();  // Toggle music when the button is clicked
         }
-        groupClickDisable(Hairstyles);
-        groupClickDisable(Accessories);
-        groupClickDisable(Backgrounds);
-
-    if (musicButtonRect.inside(x, y)) {
-        toggleBackgroundMusic();  // Toggle music when the button is clicked
-
     }
-}
 
 //--------------------------------------------------------------
 // Remaining event methods
@@ -562,6 +574,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
     currentItemIndex = -1; // Reset the item index after release
 }
+
 void ofApp::mouseEntered(int x, int y) {}
 void ofApp::mouseExited(int x, int y) {}
 void ofApp::windowResized(int w, int h) {}
