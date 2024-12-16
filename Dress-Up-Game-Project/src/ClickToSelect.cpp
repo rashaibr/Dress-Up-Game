@@ -45,3 +45,15 @@ void ClickToSelect::setPos(float x, float y)
     hitBox.x = x;
     hitBox.y = y;
 }
+
+// Get display image width
+float ClickToSelect::getDisplayWidth()
+{
+    return imageResult.getWidth();
+}
+
+// Get display image height
+float ClickToSelect::getDisplayHeight()
+{
+    return imageResult.getHeight();
+}

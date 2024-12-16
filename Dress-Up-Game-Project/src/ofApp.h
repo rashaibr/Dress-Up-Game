@@ -56,6 +56,7 @@ public:
     ofImage bg4Button;
 
     void handleGroupClick(vector<ClickToSelect> &group, int x, int y);
+    void groupClickDisable(vector<ClickToSelect>& group);
 //>>>>>>> main
 
     //layout data

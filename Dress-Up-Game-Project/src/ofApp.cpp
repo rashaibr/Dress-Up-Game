@@ -101,29 +101,29 @@ void ofApp::setup() {
     // Load the ClickToSelect images
     blond.load("blond.png");
     blondButton.load("blondButton.png");
-   /* red;
-    redButton;
-    brown;
-    brownButton;
-
-    gold;
-    goldButton;
-    silver;
-    silverButton;
-    white;
-    whiteButton;
-
-    bg1;
-    bg1Button;
-    bg2;
-    bg2Button;
-    bg3;
-    bg3Button;
-    bg4;
-    bg4Button;*/
+    red.load("red.png");
+    redButton.load("redButton.png");
+    brown.load("brown.png");
+    brownButton.load("brownButton.png");
+    
+    gold.load("gold.png");
+    goldButton.load("goldButton.png");
+    silver.load("silver.png");
+    silverButton.load("silverButton.png");
+    white.load("white.png");
+    whiteButton.load("whiteButton.png");
+    
+    bg1.load("bg1.png");
+    bg1Button.load("bg1Button.png");
+    bg2.load("bg2.png");
+    bg2Button.load("bg2Button.png");
+    bg3.load("bg3.png");
+    bg3Button.load("bg3Button.png");
+    bg4.load("bg4.png");
+    bg4Button.load("bg4Button.png");
 
     // Add the interactive image to the Hairstyles vector
-    Hairstyles.push_back(ClickToSelect(blondButton, blond, skinHairBox.GetPosX() + (skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f));
+    Hairstyles.push_back(ClickToSelect(blondButton, blond, 50, 50));
     Hairstyles.push_back(ClickToSelect(redButton, red, 50, 50));
     Hairstyles.push_back(ClickToSelect(brownButton, brown, 50, 50));
 
@@ -172,6 +172,22 @@ void ofApp::update() {
         }
 
     }
+
+    //hair buttons
+    for (int i = 0; i < Hairstyles.size(); i++)
+    {
+        Hairstyles[i].setPos(skinHairBox.GetPosX() + (skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
+    }
+    //accessories
+    for (int i = 0; i < Accessories.size(); i++)
+    {
+        Accessories[i].setPos((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f);
+    }
+    //backgrounds
+    for (int i = 0; i < Backgrounds.size(); i++)
+    {
+        Backgrounds[i].setPos((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * (i + 3), skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f);
+    }
     //character box
     characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
     characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
@@ -201,6 +217,15 @@ void ofApp::draw() {
     ofBackground(128);
     ofSetColor(ofColor(255, 0, 0, 128));
     
+    //draw backgrounds
+    for (int i = 0; i < Backgrounds.size(); i++)
+    {
+        ofPushMatrix();
+            ofScale((1.0f / Backgrounds[i].getDisplayWidth()) * ofGetWindowWidth());
+            Backgrounds[i].displayResultImage(0.0f, 0.0f);
+        ofPopMatrix();
+    }
+
     //character stand
     ofDrawRectangle(windowPosPercentX(5.0f), windowPosPercentY(75.0f), windowScalePercentX(25.0f, 1.0f), windowScalePercentY(30.0f, 1.0f));
     
@@ -232,8 +257,18 @@ void ofApp::draw() {
     {
         ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f);
     }
+    //accesory boxes
+    for (int i = 0; i < Accessories.size(); i++)
+    {
+        Accessories[i].draw();
+    }
+    //background boxes
+    for (int i = 0; i < Backgrounds.size(); i++)
+    {
+        Backgrounds[i].draw();
+    }
     //hair boxes
-    for (int i = 0; i < 3; i++)//HairLenghts.size(); i++)
+    for (int i = 0; i < Hairstyles.size(); i++)//HairLenghts.size(); i++)
     {
         ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
         ofSetColor(ofColor(255));
@@ -267,7 +302,7 @@ void ofApp::draw() {
 
     //characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
     ofPopMatrix();
-    
+
     //character box
     ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
     // Draw the button (Main Menu)
@@ -337,6 +372,17 @@ void ofApp::draw() {
         ofSetColor(ofColor::white);
 
         clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
+    }
+
+    //draw hair
+    for (int i = 0; i < Hairstyles.size(); i++)
+    {
+        Hairstyles[i].displayResultImage(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
+    }
+    //draw accessories
+    for (int i = 0; i < Accessories.size(); i++)
+    {
+        Accessories[i].displayResultImage(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
     }
 
     // If the menu is open, draw the new window
@@ -450,7 +496,9 @@ void ofApp::mousePressed(int x, int y, int button) {
             bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
             itemPositions[i + 4] = bottomClothesBox.GetPos();
         }
-
+        groupClickDisable(Hairstyles);
+        groupClickDisable(Accessories);
+        groupClickDisable(Backgrounds);
     }
 }
 
@@ -541,5 +589,13 @@ void ofApp::handleGroupClick(vector<ClickToSelect>& group, int x, int y) {
                 group[i].disable();
             }
         }
+    }
+}
+
+//disable all itmes of a click to select group
+void ofApp::groupClickDisable(vector<ClickToSelect>& group) {
+    for (int i = 0; i < group.size(); i++)
+    {
+        group[i].disable();
     }
 }

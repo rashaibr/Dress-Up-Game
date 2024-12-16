@@ -13,7 +13,9 @@ public:
     bool isToggled() const;  // New method to check if toggled
     void disable();          // New method to disable
 
-    void setPos(float x, float y);
+    void setPos(float x, float y); //Set the position of the hitbox
+    float getDisplayWidth(); // Get the width of the display image
+    float getDisplayHeight(); // Get the height of the display image
 
 private:
     ofImage imageToSelect;    // Initial clickable image
