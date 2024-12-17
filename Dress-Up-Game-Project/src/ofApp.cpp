@@ -289,6 +289,10 @@ void ofApp::draw() {
     ofDrawRectRounded(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight(), 50.0f);
     ofSetColor(ofColor::white);
     
+    // Text for upper box
+    ofDrawBitmapString("\n Accessories\n      &\n Backgrounds:", hairBox.GetPosX() + hairBox.GetWidth() * 0.02f, hairBox.GetPosY() + hairBox.GetHeight() * 0.22f);
+    ofDrawBitmapString(" Hair:", hairBox.GetPosX() + hairBox.GetWidth() * 0.02f, hairBox.GetPosY() + hairBox.GetHeight() * 0.70f);
+
     //accesory boxes
     for (int i = 0; i < Accessories.size(); i++)
     {
