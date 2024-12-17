@@ -23,11 +23,6 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-// <<<<<<< HEAD
-//     vector<ClickToSelect> ClickToSelectImages; // Store all interactive images
-//     vector<ClickToSelect> SkinTones;//store the skin tones 
-//     vector<ofImage> HairButtons;
-// =======
     vector<ClickToSelect> Hairstyles;
     vector<ClickToSelect> Accessories;
     vector<ClickToSelect> Backgrounds;
@@ -57,21 +52,20 @@ public:
 
     void handleGroupClick(vector<ClickToSelect> &group, int x, int y);
     void groupClickDisable(vector<ClickToSelect>& group);
-//>>>>>>> main
 
     //layout data
-    ofImage layoutRef;
     float windowPosPercentX(float percent);
     float windowPosPercentY(float percent);
     float windowScalePercentX(float percent, float originalWidth);
     float windowScalePercentY(float percent, float originalHeight);
 
-    UIBox skinHairBox;
+    UIBox hairBox;
     UIBox clothesBox;
     UIBox topClothesBox;
     UIBox bottomClothesBox;
     UIBox characterSnapRegion;
-    
+    UIBox characterStand;
+
     ofImage restartImage;
     UIBox restartBox;
 
@@ -108,7 +102,6 @@ public:
     //The index of the clothing item being dragged
     int currentItemIndex;
 
-
     //wether the item is being dragged
     bool isDragging;
 
@@ -137,4 +130,10 @@ public:
     // Add sound player for background music
     ofSoundPlayer backgroundMusic;
     bool isMusicPlaying; // To track the music state
+
+    // Screen shot of character button
+    ofImage cameraButton;
+    ofRectangle cameraButtonRect;
+    bool characterSaved;
+    void takePicture();
 };

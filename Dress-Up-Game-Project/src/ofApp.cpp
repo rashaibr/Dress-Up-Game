@@ -140,15 +140,6 @@ void ofApp::setup() {
 
     ofLogNotice() << "Setup complete. Clickable images initialized.";
 
-    //hair buttons
-    //HairButtons.push_back(ofImage("Frame_1.png"));
-    //HairButtons.push_back(ofImage("Frame_2.png"));
-    //HairButtons.push_back(ofImage("Frame_3.png"));
-
-    //layout setup
-    layoutRef.load("layout_main_ref.jpg");
-
-
     //load reset image
     restartImage.load("restart.png");
 
@@ -162,13 +153,16 @@ void ofApp::setup() {
     musicButton.load("musicButton.png");
     musicButtonRect.set(500, 50, musicButton.getWidth(), musicButton.getHeight()); // Adjust position and size
 
+    // Load the camera button image
+    cameraButton.load("camera.png");
+    cameraButtonRect.set(0 ,0 ,cameraButton.getWidth() ,cameraButton.getHeight());
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
     // Update logic if needed
-    skinHairBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(12.0f));
-    skinHairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.25f);
+    hairBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(12.0f));
+    hairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.25f);
 
     //move dress if it's snapped to character
     for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
@@ -182,7 +176,6 @@ void ofApp::update() {
             //snap dresses to correct height
             if (i < 4)
             {
-                
                 itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
             }
             //snap shoes to correct height
@@ -199,26 +192,57 @@ void ofApp::update() {
 
     }
 
+    // Set top clothing positions
+    for (int i = 0; i < 4; i++)
+    {
+
+        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
+        {
+            itemPositions[i] = topClothesBox.GetPos();
+        }
+
+    }
+
+    // Set bottom clothing positions
+    for (int i = 0; i < 4; i++)
+    {
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
+        {
+            itemPositions[i + 4] = bottomClothesBox.GetPos();
+        }
+
+    }
+
     //hair buttons
     for (int i = 0; i < Hairstyles.size(); i++)
     {
-        Hairstyles[i].setPos(skinHairBox.GetPosX() + (skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
+        Hairstyles[i].setPos(hairBox.GetPosX() + (hairBox.GetWidth() * 0.2f) + hairBox.GetWidth() * 0.20f * i, hairBox.GetPosY() + hairBox.GetHeight() * 0.6f);
     }
     //accessories
     for (int i = 0; i < Accessories.size(); i++)
     {
-        Accessories[i].setPos((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f);
+        Accessories[i].setPos((hairBox.GetPosX() + hairBox.GetWidth() * 0.2f) + hairBox.GetWidth() * 0.10f * i, hairBox.GetPosY() + hairBox.GetHeight() * 0.2f);
     }
     //backgrounds
     for (int i = 0; i < Backgrounds.size(); i++)
     {
-        Backgrounds[i].setPos((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * (i + 3), skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f);
+        Backgrounds[i].setPos((hairBox.GetPosX() + hairBox.GetWidth() * 0.2f) + hairBox.GetWidth() * 0.10f * (i + 3), hairBox.GetPosY() + hairBox.GetHeight() * 0.2f);
     }
     //character box
     characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
     characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
     characterSnapRegion.hitBox.setPosition(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
     characterSnapRegion.hitBox.setSize(characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+
+    //character stand
+    characterStand.SetSize(characterSnapRegion.GetWidth() * 1.5f, ofGetWindowHeight());
+    characterStand.SetPos(characterSnapRegion.hitBox.getCenter().x - characterStand.GetWidth() * 0.5f, characterSnapRegion.hitBox.getCenter().y + characterSnapRegion.GetHeight() * 0.5f);
 
     //clothing box
     clothesBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(38.0f));
@@ -233,21 +257,17 @@ void ofApp::update() {
     //music box
     musicButtonRect.setPosition(ofGetWindowWidth() - windowScalePercentY(10.0f, 1.0f), windowPosPercentY(1.0f));
     musicButtonRect.setSize(windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
+
+    //camera box
+    cameraButtonRect.setPosition(ofGetWindowWidth() - windowScalePercentX(10.0f, 1.0f), windowPosPercentY(88.0f));
+    cameraButtonRect.setSize(windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    // draw layout
-    ofPushMatrix();
-    //scale background to the height of our window
-    ofScale((1.0f / layoutRef.getHeight()) * ofGetWindowHeight());
-    ofSetColor(ofColor(255));
-    //layoutRef.draw(0.0f, 0.0f);
-    ofPopMatrix();
-    ofBackground(128);
-    ofSetColor(ofColor(255, 0, 0, 128));
 
     //draw backgrounds
+    ofSetColor(ofColor::white);
     for (int i = 0; i < Backgrounds.size(); i++)
     {
         ofPushMatrix();
@@ -257,36 +277,16 @@ void ofApp::draw() {
     }
 
     //character stand
-    ofDrawRectangle(windowPosPercentX(5.0f), windowPosPercentY(75.0f), windowScalePercentX(25.0f, 1.0f), windowScalePercentY(30.0f, 1.0f));
-
-    //sking + hair box
-    //ofDrawRectangle(windowPosPercentX(35.0f), windowPosPercentY(12.0f), windowScalePercentX(50.0f, 1.0f), windowScalePercentY(20.0f, 1.0f));
-    ofDrawRectangle(skinHairBox.GetPos(), skinHairBox.GetWidth(), skinHairBox.GetHeight());
+    ofSetColor(ofColor::deepPink);
+    ofDrawRectRounded(characterStand.GetPos(), characterStand.GetWidth(), characterStand.GetHeight(), 50.0f);
+    
+    //box for hair, accessories, and backgrounds
+    ofDrawRectRounded(hairBox.GetPos(), hairBox.GetWidth(), hairBox.GetHeight(), 50.0f);
 
     //clothing box
-    ofDrawRectangle(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight());
-
-    //top icons
-    ofDrawRectangle(restartBox.GetPos(), restartBox.GetWidth(), restartBox.GetHeight());
-    ofSetColor(255);
-    ofPushMatrix();
-    ofTranslate(restartBox.GetPos());
-    ofScale(1.0f / restartImage.getWidth() * restartBox.GetWidth());
-    restartImage.draw(0, 0);
-    ofPopMatrix();
-    ofSetColor(ofColor(255, 0, 0, 128));
-    ofDrawRectangle(ofGetWindowWidth() - windowScalePercentY(10.0f, 1.0f), windowPosPercentY(1.0f), windowScalePercentY(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
-
-    //bottom icons
-    ofDrawRectangle(ofGetWindowWidth() - windowScalePercentX(10.0f, 1.0f), windowPosPercentY(88.0f), windowScalePercentX(10.0f, 1.0f), windowScalePercentY(10.0f, 1.0f));
-
-    ofSetColor(ofColor(0, 0, 255, 128));
-
-    //skintone boxes
-    for (int i = 0; i < 7; i++)//SkinTones.size(); i++)
-    {
-        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.10f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f, skinHairBox.GetHeight() * 0.2f);
-    }
+    ofDrawRectRounded(clothesBox.GetPos(), clothesBox.GetWidth(), clothesBox.GetHeight(), 50.0f);
+    ofSetColor(ofColor::white);
+    
     //accesory boxes
     for (int i = 0; i < Accessories.size(); i++)
     {
@@ -300,115 +300,36 @@ void ofApp::draw() {
     //hair boxes
     for (int i = 0; i < Hairstyles.size(); i++)//HairLenghts.size(); i++)
     {
-        ofDrawRectangle((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f, skinHairBox.GetHeight() * 0.8f, skinHairBox.GetHeight() * 0.2f);
-        ofSetColor(ofColor(255));
-        Hairstyles[i].draw();//((skinHairBox.GetPosX() + skinHairBox.GetWidth() * 0.2f) + skinHairBox.GetWidth() * 0.20f * i, skinHairBox.GetPosY() + skinHairBox.GetHeight() * 0.6f);
-        ofSetColor(ofColor(0, 0, 255, 128));
+        Hairstyles[i].draw();//((hairBox.GetPosX() + hairBox.GetWidth() * 0.2f) + hairBox.GetWidth() * 0.20f * i, hairBox.GetPosY() + hairBox.GetHeight() * 0.6f);
     }
-
-    /*
-    // Draw all clickable images
-    for (int i = 0; i < ClickToSelectImages.size(); i++) {
-        ClickToSelectImages[i].draw();
-    }
-
-    // Draw result images if toggled
-    for (int i = 0; i < ClickToSelectImages.size(); i++) {
-        ClickToSelectImages[i].displayResultImage(100, 100);
-    }
-    */
-
-    //draw the character base
-    //(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
-
-    ofPushMatrix();
-    ofTranslate(characterSnapRegion.hitBox.getCenter());
-    //ofScale((1.0f / characterBase.getHeight()) * characterSnapRegion.GetHeight());
-    //cout << windowScalePercentY(65.0f, characterBase.getHeight()) << '\n';
-    ofSetRectMode(OF_RECTMODE_CENTER);
-    characterBase.draw(0, 0);//characterBase.getWidth() * 0.20f, characterBase.getHeight() * 0.5f);
-    ofSetRectMode(OF_RECTMODE_CORNER);
-    //characterBase.draw(windowPosPercentX(10.0f), windowPosPercentY(18.0f), windowScalePercentX(15.0f, characterBase.getWidth()), windowScalePercentY(65.0f, characterBase.getHeight()));
-
-//characterBase.draw(400, 200, characterBase.getWidth(), characterBase.getHeight());
-    ofPopMatrix();
 
     //character box
-    ofDrawRectangle(characterSnapRegion.GetPos(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    ofPushMatrix();
+        ofTranslate(characterSnapRegion.hitBox.getCenter());
+        ofSetRectMode(OF_RECTMODE_CENTER);
+        characterBase.draw(0, 0);
+        ofSetRectMode(OF_RECTMODE_CORNER);
+    ofPopMatrix();
+
     // Draw the button (Main Menu)
     ofSetColor(ofColor::deepPink);
-    ofDrawRectangle(menuButton); // Draw the button
+    ofDrawRectRounded(menuButton, 25.0f); // Draw the button
 
     // Draw the label inside the button
     ofSetColor(ofColor::white);
     ofDrawBitmapString("Main Menu", menuButton.getCenter().x - 40, menuButton.getCenter().y);
-
-    //top clothing
-    for (int i = 0; i < 4; i++)
-    {
-
-        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
-        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-
-        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
-        {
-            itemPositions[i] = topClothesBox.GetPos();
-        }
-
-        ofDrawRectangle(topClothesBox.GetPos(), topClothesBox.GetWidth(), topClothesBox.GetHeight());
-    }
-
-    //bottom clothing
-    for (int i = 0; i < 4; i++)
-    {
-        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
-        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-
-        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
-        {
-            itemPositions[i + 4] = bottomClothesBox.GetPos();
-        }
-
-        ofDrawRectangle(bottomClothesBox.GetPos(), bottomClothesBox.GetWidth(), bottomClothesBox.GetHeight());
-    }
-
-    // Draw clothing items
-    for (size_t i = clothingItems.size(); i > 0; --i) {
-
-        /*  if (!characterSnapRegion.hitBox.inside(itemPositions[i]))
-          {
-              if (clothingItems[i]->getHeight() > topClothesBox.GetHeight())
-              {
-                  ofPushMatrix();
-                  ofTranslate(itemPositions[i]);
-                  ofScale(1.0f / clothingItems[i]->getHeight() * topClothesBox.GetHeight());
-                  clothingItems[i]->draw(0, 0);
-                  ofPopMatrix();
-              }
-              else if (clothingItems[i]->getWidth() > topClothesBox.GetWidth())
-              {
-                  ofPushMatrix();
-                  ofTranslate(itemPositions[i]);
-                  ofScale(1.0f / clothingItems[i]->getWidth() * topClothesBox.GetWidth());
-                  clothingItems[i]->draw(0,0);
-                  ofPopMatrix();
-              }
-          }
-          else
-          {*/
-          //clothingItems[i]->draw(itemPositions[i]);
-      //}
-
-        ofSetColor(ofColor::white);
-
-        clothingItems[i - 1]->draw(itemPositions[i - 1].x, itemPositions[i - 1].y);
-    }
 
     //draw hair
     for (int i = 0; i < Hairstyles.size(); i++)
     {
         Hairstyles[i].displayResultImage(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY());
     }
+
+    // Draw clothing items in reverse order so pants are under dresses
+    for (size_t i = clothingItems.size(); i > 0; --i) {
+        clothingItems[i - 1]->draw(itemPositions[i - 1].x, itemPositions[i - 1].y);
+    }
+
     //draw accessories
     for (int i = 0; i < Accessories.size(); i++)
     {
@@ -424,13 +345,13 @@ void ofApp::draw() {
 
         // Draw the new window
         ofSetColor(ofColor::white);
-        ofDrawRectangle(newWindow);
+        ofDrawRectRounded(newWindow, 25.0f);
 
         // Draw buttons inside the window
         ofSetColor(ofColor::deepPink);
-        ofDrawRectangle(resumeButton);
-        ofDrawRectangle(creditsButton);
-        ofDrawRectangle(quitButton);
+        ofDrawRectRounded(resumeButton, 25.0f);
+        ofDrawRectRounded(creditsButton, 25.0f);
+        ofDrawRectRounded(quitButton, 25.0f);
 
         // Draw button labels
         ofSetColor(ofColor::white);
@@ -442,12 +363,13 @@ void ofApp::draw() {
     if (isCreditsOpen) {
         // Draw the credits window
         ofSetColor(ofColor::white);
-        ofDrawRectangle(creditsWindow);
+        ofDrawRectRounded(creditsWindow, 25.0f);
 
         // Draw the close button
+        ofSetColor(ofColor::deepPink);
+        ofDrawRectRounded(closeButton, 25.0f);
         ofSetColor(ofColor::white);
-        ofDrawRectangle(closeButton);
-        ofSetColor(ofColor::black);
+        ofDrawBitmapString("X", closeButton.getCenter().x - 5, closeButton.getCenter().y + 5);
 
         // Draw the credits text
         ofSetColor(ofColor::deepPink);
@@ -455,8 +377,11 @@ void ofApp::draw() {
         ofDrawBitmapString("Racha Ibrahim", creditsWindow.x + 20, creditsWindow.y + 80);
         ofDrawBitmapString("Hairuo Chen", creditsWindow.x + 20, creditsWindow.y + 110);
         ofDrawBitmapString("Jason Law", creditsWindow.x + 20, creditsWindow.y + 140);
+        ofSetColor(ofColor::white);
     }
 
+    // Top icons
+    // Music button
     if (!isMusicPlaying)
     {
         ofSetColor(ofColor::grey); // Choose a color for the music button when disabled
@@ -466,6 +391,36 @@ void ofApp::draw() {
         ofSetColor(ofColor::white);
     }
     musicButton.draw(musicButtonRect); // Draw the music button at its specified position
+    ofSetColor(ofColor::white);
+
+    // Restart button
+    ofPushMatrix();
+    ofTranslate(restartBox.GetPos());
+    ofScale(1.0f / restartImage.getWidth() * restartBox.GetWidth());
+    restartImage.draw(0, 0);
+    ofPopMatrix();
+
+    // Bottom icons
+    // Camera button
+    if (cameraButtonRect.inside(ofGetMouseX(), ofGetMouseY()))
+    {
+        ofSetColor(ofColor::deepPink);
+    }
+    else if (characterSaved)
+    {
+        ofSetColor(ofColor::lightPink);
+    }
+    else
+    {
+        ofSetColor(ofColor::white);
+    }
+    ofPushMatrix();
+    ofTranslate(cameraButtonRect.getCenter());
+    ofScale(1.0f / cameraButton.getHeight() * cameraButtonRect.getHeight());
+    ofSetRectMode(OF_RECTMODE_CENTER);
+    cameraButton.draw(0, 0);
+    ofSetRectMode(OF_RECTMODE_CORNER);
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------
@@ -543,6 +498,16 @@ void ofApp::draw() {
 
         if (musicButtonRect.inside(x, y)) {
             toggleBackgroundMusic();  // Toggle music when the button is clicked
+        }
+
+        if (cameraButtonRect.inside(x, y))
+        {
+            takePicture(); // take a screen shot of the character
+            characterSaved = true;
+        }
+        else
+        {
+            characterSaved = false;
         }
     }
 
@@ -655,3 +620,12 @@ void ofApp::toggleBackgroundMusic() {
     isMusicPlaying = !isMusicPlaying;
 }
 
+void ofApp::takePicture()
+{
+    ofImage screenshot;
+    static int count = 0;
+    string filename = "character_" + ofToString(count, 3, '0') + ".png";
+    screenshot.grabScreen(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    screenshot.save(filename);
+    count++;
+}
