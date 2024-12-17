@@ -404,14 +404,17 @@ void ofApp::draw() {
     // Camera button
     if (cameraButtonRect.inside(ofGetMouseX(), ofGetMouseY()))
     {
+        // change color when we hover
         ofSetColor(ofColor::deepPink);
     }
     else if (characterSaved)
     {
+        // change camera color to show that image was saved
         ofSetColor(ofColor::lightPink);
     }
     else
     {
+        // default color
         ofSetColor(ofColor::white);
     }
     ofPushMatrix();
@@ -502,7 +505,11 @@ void ofApp::draw() {
 
         if (cameraButtonRect.inside(x, y))
         {
+            //if the character's name is not NULL
+            //takePicture(string name);
+            //else use default naming
             takePicture(); // take a screen shot of the character
+            
             characterSaved = true;
         }
         else
@@ -620,16 +627,19 @@ void ofApp::toggleBackgroundMusic() {
     isMusicPlaying = !isMusicPlaying;
 }
 
+// Screen shot character and increment saves
 void ofApp::takePicture()
 {
     ofImage screenshot;
     static int count = 0;
+    // we start at '0' and can increment to 3 digits (ex. max = 999)
     string filename = "character_" + ofToString(count, 3, '0') + ".png";
     screenshot.grabScreen(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
     screenshot.save(filename);
     count++;
 }
 
+// We can save the image with the character's name too
 void ofApp::takePicture(string name)
 {
     ofImage screenshot;
