@@ -629,3 +629,11 @@ void ofApp::takePicture()
     screenshot.save(filename);
     count++;
 }
+
+void ofApp::takePicture(string name)
+{
+    ofImage screenshot;
+    string filename = name + ".png";
+    screenshot.grabScreen(characterSnapRegion.GetPosX(), characterSnapRegion.GetPosY(), characterSnapRegion.GetWidth(), characterSnapRegion.GetHeight());
+    screenshot.save(filename);
+}

@@ -136,4 +136,5 @@ public:
     ofRectangle cameraButtonRect;
     bool characterSaved;
     void takePicture();
+    void takePicture(string name);
 };
