@@ -179,8 +179,22 @@ void ofApp::update() {
             //cout << "in center" << '\n';
             //set the position of the corner of clothing image off center so it draws properly on the character
             itemPositions[i].x = characterSnapRegion.hitBox.getCenter().x - (clothingItems[i]->getWidth() / 2);
-            itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
-            
+            //snap dresses to correct height
+            if (i < 4)
+            {
+                
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
+            }
+            //snap shoes to correct height
+            if (i >= 4 && i <= 5)
+            {
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height - clothingItems[i]->getHeight();
+            }
+            //snap pants to correct height
+            if (i > 5)
+            {
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.55f;
+            }
         }
 
     }
@@ -359,7 +373,7 @@ void ofApp::draw() {
     }
 
     // Draw clothing items
-    for (size_t i = 0; i < clothingItems.size(); ++i) {
+    for (size_t i = clothingItems.size(); i > 0; --i) {
 
         /*  if (!characterSnapRegion.hitBox.inside(itemPositions[i]))
           {
@@ -387,7 +401,7 @@ void ofApp::draw() {
 
         ofSetColor(ofColor::white);
 
-        clothingItems[i]->draw(itemPositions[i].x, itemPositions[i].y);
+        clothingItems[i - 1]->draw(itemPositions[i - 1].x, itemPositions[i - 1].y);
     }
 
     //draw hair
