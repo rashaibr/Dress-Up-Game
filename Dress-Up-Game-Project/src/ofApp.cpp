@@ -156,6 +156,8 @@ void ofApp::setup() {
     // Load the camera button image
     cameraButton.load("camera.png");
     cameraButtonRect.set(0 ,0 ,cameraButton.getWidth() ,cameraButton.getHeight());
+    cameraSound.load("cameraSound.mp3");
+    cameraSound.setLoop(false);
 }
 
 //--------------------------------------------------------------
@@ -432,25 +434,6 @@ void ofApp::draw() {
         handleGroupClick(Accessories, x, y);
         handleGroupClick(Backgrounds, x, y);
 
-        isDragging = false;       // Reset dragging state
-        currentItemIndex = -1;    // Reset selected item index
-
-        // Loop through clothing items to check if the mouse click is within their bounds
-        for (size_t i = 0; i < clothingItems.size(); i++) {
-            // Calculate the item's bounds
-            float itemLeft = itemPositions[i].x;
-            float itemRight = itemPositions[i].x + clothingItems[i]->getWidth();
-            float itemTop = itemPositions[i].y;
-            float itemBottom = itemPositions[i].y + clothingItems[i]->getHeight();
-
-            // Check if the click is inside the bounds of the item
-            if (x >= itemLeft && x <= itemRight && y >= itemTop && y <= itemBottom) {
-                isDragging = true;
-                currentItemIndex = i; // Set the index of the clicked item
-                return; // Exit the loop as soon as the item is found
-            }
-        }
-
         // Check if the mouse is inside the Main Menu button
         if (menuButton.inside(x, y)) {
             isMenuOpen = !isMenuOpen; // Toggle the menu state
@@ -472,6 +455,26 @@ void ofApp::draw() {
 
         if (isCreditsOpen && closeButton.inside(x, y)) {
             isCreditsOpen = false; // Close the credits popup
+        }
+
+        // Dragging logic
+        isDragging = false;       // Reset dragging state
+        currentItemIndex = -1;    // Reset selected item index
+
+        // Loop through clothing items to check if the mouse click is within their bounds
+        for (size_t i = 0; i < clothingItems.size(); i++) {
+            // Calculate the item's bounds
+            float itemLeft = itemPositions[i].x;
+            float itemRight = itemPositions[i].x + clothingItems[i]->getWidth();
+            float itemTop = itemPositions[i].y;
+            float itemBottom = itemPositions[i].y + clothingItems[i]->getHeight();
+
+            // Check if the click is inside the bounds of the item
+            if (x >= itemLeft && x <= itemRight && y >= itemTop && y <= itemBottom) {
+                isDragging = true;
+                currentItemIndex = i; // Set the index of the clicked item
+                return; // Exit the loop as soon as the item is found
+            }
         }
 
         // if the player hits the restart button
@@ -509,7 +512,7 @@ void ofApp::draw() {
             //takePicture(string name);
             //else use default naming
             takePicture(); // take a screen shot of the character
-            
+            cameraSound.play();
             characterSaved = true;
         }
         else

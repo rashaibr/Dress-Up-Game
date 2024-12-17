@@ -137,4 +137,5 @@ public:
     bool characterSaved;
     void takePicture();
     void takePicture(string name);
+    ofSoundPlayer cameraSound;
 };
