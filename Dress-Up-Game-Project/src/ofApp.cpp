@@ -44,24 +44,9 @@ void ofApp::setup() {
     // Set background color
     ofBackground(255); // White background
 
-    //initial positions
-    itemX1 = 200;
-    itemY1 = 100;
-
-    itemX2 = 400;
-    itemY2 = 100;
-
-    itemX3 = 600;
-    itemY3 = 100;
-
-    itemX4 = 800;
-    itemY4 = 100;
-
-    itemX5 = 1000;
-    itemY5 = 100;
-
     characterBase.load("character.png");
-    
+
+    //list of clothing items
     //tops
     pinkShirt.load("pinkShirt.png");
     purpleDress.load("purpleDress.png");
@@ -73,8 +58,6 @@ void ofApp::setup() {
     //pants
     jeans.load("jeans.png");
     shorts.load("shorts.png");
-
-    //list of clothing items
 
     //tops
     clothingItems.push_back(&pinkShirt);
@@ -88,7 +71,7 @@ void ofApp::setup() {
     clothingItems.push_back(&jeans);
     clothingItems.push_back(&shorts);
 
-
+    // Initialize clothing positions
     int xOffset = 200; // Horizontal offset for positioning
     for (size_t i = 0; i < clothingItems.size(); ++i) {
         itemPositions.push_back(ofVec2f(xOffset, 50));
@@ -166,60 +149,11 @@ void ofApp::update() {
     hairBox.SetPos(windowPosPercentX(30.0f), windowPosPercentY(12.0f));
     hairBox.SetSize(ofGetWindowWidth() * 0.6f, ofGetWindowHeight() * 0.25f);
 
-    //move dress if it's snapped to character
-    for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
+    // Snap clothes on character
+    snapClothes();
 
-        if (itemPositions[i] == characterSnapRegion.hitBox.getCenter()) //if the item was snapped to center of character hitbox
-        {
-            //testing
-            //cout << "in center" << '\n';
-            //set the position of the corner of clothing image off center so it draws properly on the character
-            itemPositions[i].x = characterSnapRegion.hitBox.getCenter().x - (clothingItems[i]->getWidth() / 2);
-            //snap dresses to correct height
-            if (i < 4)
-            {
-                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
-            }
-            //snap shoes to correct height
-            if (i >= 4 && i <= 5)
-            {
-                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height - clothingItems[i]->getHeight();
-            }
-            //snap pants to correct height
-            if (i > 5)
-            {
-                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.55f;
-            }
-        }
-
-    }
-
-    // Set top clothing positions
-    for (int i = 0; i < 4; i++)
-    {
-
-        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
-        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-
-        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
-        {
-            itemPositions[i] = topClothesBox.GetPos();
-        }
-
-    }
-
-    // Set bottom clothing positions
-    for (int i = 0; i < 4; i++)
-    {
-        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
-        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-
-        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
-        {
-            itemPositions[i + 4] = bottomClothesBox.GetPos();
-        }
-
-    }
+    // Put the clothes in the cloting box
+    setClothingPos();
 
     //hair buttons
     for (int i = 0; i < Hairstyles.size(); i++)
@@ -236,6 +170,7 @@ void ofApp::update() {
     {
         Backgrounds[i].setPos((hairBox.GetPosX() + hairBox.GetWidth() * 0.2f) + hairBox.GetWidth() * 0.10f * (i + 3), hairBox.GetPosY() + hairBox.GetHeight() * 0.2f);
     }
+
     //character box
     characterSnapRegion.SetPos(windowPosPercentX(10.0f), windowPosPercentY(18.0f));
     characterSnapRegion.SetSize(characterBase.getWidth(), characterBase.getHeight());//windowScalePercentX(15.0f, 1.0f), windowScalePercentY(65.0f, 1.0f));
@@ -484,26 +419,7 @@ void ofApp::draw() {
         // if the player hits the restart button
         if (restartBox.hitBox.inside(x, y))
         {
-            //top clothes
-            for (int i = 0; i < 4; i++)
-            {
-
-                topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
-                topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-                itemPositions[i] = topClothesBox.GetPos();
-            }
-
-            //bottom clothes
-            for (int i = 0; i < 4; i++)
-            {
-                bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
-                bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-                itemPositions[i + 4] = bottomClothesBox.GetPos();
-            }
-            groupClickDisable(Hairstyles);
-            groupClickDisable(Accessories);
-            groupClickDisable(Backgrounds);
-
+            restart();
         }
 
         if (musicButtonRect.inside(x, y)) {
@@ -613,6 +529,89 @@ void ofApp::handleGroupClick(vector<ClickToSelect>& group, int x, int y) {
                 group[i].disable();
             }
         }
+    }
+}
+
+void ofApp::restart()
+{
+    //top clothes
+    for (int i = 0; i < 4; i++)
+    {
+
+        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        itemPositions[i] = topClothesBox.GetPos();
+    }
+
+    //bottom clothes
+    for (int i = 0; i < 4; i++)
+    {
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        itemPositions[i + 4] = bottomClothesBox.GetPos();
+    }
+    groupClickDisable(Hairstyles);
+    groupClickDisable(Accessories);
+    groupClickDisable(Backgrounds);
+}
+
+// Set the clothes into the clothing box
+void ofApp::setClothingPos()
+{
+    // Set top clothing positions
+    for (int i = 0; i < 4; i++)
+    {
+
+        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i].x + clothingItems[i]->getWidth() * 0.5f, itemPositions[i].y + clothingItems[i]->getHeight() * 0.5f))
+        {
+            itemPositions[i] = topClothesBox.GetPos();
+        }
+
+    }
+
+    // Set bottom clothing positions
+    for (int i = 0; i < 4; i++)
+    {
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+
+        if (!isDragging && !characterSnapRegion.hitBox.inside(itemPositions[i + 4].x + clothingItems[i + 4]->getWidth() * 0.5f, itemPositions[i + 4].y + clothingItems[i + 4]->getHeight() * 0.5f))
+        {
+            itemPositions[i + 4] = bottomClothesBox.GetPos();
+        }
+
+    }
+}
+
+// Snap clothes on the character
+void ofApp::snapClothes()
+{
+    for (size_t i = 0; i < clothingItems.size(); ++i) { //check all clothes
+
+        if (itemPositions[i] == characterSnapRegion.hitBox.getCenter()) //if the item was snapped to center of character hitbox
+        {
+            //set the position of the corner of clothing image off center so it draws properly on the character
+            itemPositions[i].x = characterSnapRegion.hitBox.getCenter().x - (clothingItems[i]->getWidth() / 2);
+            //snap dresses to correct height
+            if (i < 4)
+            {
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.34f;
+            }
+            //snap shoes to correct height
+            if (i >= 4 && i <= 5)
+            {
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height - clothingItems[i]->getHeight();
+            }
+            //snap pants to correct height
+            if (i > 5)
+            {
+                itemPositions[i].y = characterSnapRegion.hitBox.y + characterSnapRegion.hitBox.height * 0.55f;
+            }
+        }
+
     }
 }
 

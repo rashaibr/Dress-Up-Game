@@ -68,9 +68,9 @@ public:
 
     ofImage restartImage;
     UIBox restartBox;
+    void restart();
 
     //variables for the character and items
-
     ofImage characterBase;
     
     //tops
@@ -85,13 +85,8 @@ public:
     ofImage jeans;
     ofImage shorts;
   
-
-    //position of the draggable item
-    float itemX1, itemY1;
-    float itemX2, itemY2;
-    float itemX3, itemY3;
-    float itemX4, itemY4;
-    float itemX5, itemY5;
+    void setClothingPos();
+    void snapClothes();
 
     //list of clothing items
     vector<ofImage*> clothingItems;
