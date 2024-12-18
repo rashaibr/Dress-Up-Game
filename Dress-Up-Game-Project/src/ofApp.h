@@ -68,6 +68,7 @@ public:
 
     ofImage restartImage;
     UIBox restartBox;
+    void restart();
 
     //variables for the character and items
 
@@ -85,6 +86,7 @@ public:
     ofImage jeans;
     ofImage shorts;
   
+    void setClothingPos();
 
     //position of the draggable item
     float itemX1, itemY1;

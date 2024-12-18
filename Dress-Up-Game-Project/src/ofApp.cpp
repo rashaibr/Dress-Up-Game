@@ -484,26 +484,7 @@ void ofApp::draw() {
         // if the player hits the restart button
         if (restartBox.hitBox.inside(x, y))
         {
-            //top clothes
-            for (int i = 0; i < 4; i++)
-            {
-
-                topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
-                topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-                itemPositions[i] = topClothesBox.GetPos();
-            }
-
-            //bottom clothes
-            for (int i = 0; i < 4; i++)
-            {
-                bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
-                bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
-                itemPositions[i + 4] = bottomClothesBox.GetPos();
-            }
-            groupClickDisable(Hairstyles);
-            groupClickDisable(Accessories);
-            groupClickDisable(Backgrounds);
-
+            restart();
         }
 
         if (musicButtonRect.inside(x, y)) {
@@ -614,6 +595,29 @@ void ofApp::handleGroupClick(vector<ClickToSelect>& group, int x, int y) {
             }
         }
     }
+}
+
+void ofApp::restart()
+{
+    //top clothes
+    for (int i = 0; i < 4; i++)
+    {
+
+        topClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.05f);
+        topClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        itemPositions[i] = topClothesBox.GetPos();
+    }
+
+    //bottom clothes
+    for (int i = 0; i < 4; i++)
+    {
+        bottomClothesBox.SetPos(clothesBox.GetPos().x + clothesBox.GetWidth() * 0.25f * i + clothesBox.GetWidth() * 0.04f, clothesBox.GetPos().y + clothesBox.GetHeight() * 0.6f);
+        bottomClothesBox.SetSize(clothesBox.GetHeight() * 0.3f, clothesBox.GetHeight() * 0.3f);
+        itemPositions[i + 4] = bottomClothesBox.GetPos();
+    }
+    groupClickDisable(Hairstyles);
+    groupClickDisable(Accessories);
+    groupClickDisable(Backgrounds);
 }
 
 //disable all itmes of a click to select group
